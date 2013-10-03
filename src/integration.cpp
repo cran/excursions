@@ -18,7 +18,7 @@
 
 #include "integration.h"
 
-void shapeInt(vector< map<int,double> > * L, double * a,double * b,int K, const int n,double lim,double * Pv, double * Ev, int max_size, const int n_threads){
+void shapeInt(vector< map<int,double> > * L, double * a,double * b,int K, const int n,double lim,double * Pv, double * Ev, int max_size, int n_threads){
 	//	return [Pv Ev x F]
 	
 	double *al, *bl,*f,*s,*Li;

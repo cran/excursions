@@ -193,7 +193,7 @@ int main (int argc, char * const argv[]) {
 	fwrite(result, sizeof(double), 2, pFile);
 	fclose(pFile);
 
-
+	delete[] result;
 	delete[] mu;
 	delete[] a;
 	delete[] b;

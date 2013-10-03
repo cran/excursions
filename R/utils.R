@@ -39,25 +39,21 @@ private.link.function <-
 private.excursions.call = function (path,func)
 {
 	if(private.os.type() == "mac"){
-		if(R.Version()$arch == "x86_64"){
-			binpath = file.path(system.file("bin",package="excursions"),"mac")
-		} else {
-			binpath = file.path(system.file("bin",package="excursions"),"mac")
-		}
+		binpath = file.path(system.file("bin",package="excursions"),"mac")
 	} else if(private.os.type() == "linux"){
 		binpath = file.path(system.file("bin",package="excursions"),"linux")
 	} else if(private.os.type() == "windows"){
-		binpath = file.path(system.file("bin",package="excursions"),"windows")
+		if(R.Version()$arch == "i386"){
+			binpath = file.path(system.file("bin",package="excursions"),
+												"windows/i386")
+		} else {
+			binpath = file.path(system.file("bin",package="excursions"),
+												"windows/x64")
+		}
 	} else {
 		stop("OS type not supported")
 	}
-	if(private.os.type() != "mac" && R.Version()$arch == "x86_64"){
-		system(paste(file.path(binpath,func), file.path(path,"")))
-	} else if(private.os.type() != "mac"){
-		system(paste(file.path(binpath,func), file.path(path,"")))
-	} else {
-		system(paste(file.path(binpath,func), file.path(path,"")))
-	}
+	system(paste(file.path(binpath,func), file.path(path,"")))
 }
 
 #from INLA
