@@ -47,8 +47,7 @@ excursions.int(mu, Q, a, b, n.iter=10000, Q.chol, ind,
 }
 
 \references{
-Bolin, D. and Lindgren, F. (2013) \emph{Excursion sets and contour
-  credible regions for latent Gaussian models}, ArXiv preprint.
+Bolin, D. and Lindgren, F. (2013) \emph{Excursion and contour uncertainty regions for latent Gaussian models}, Journal of the Royal Statistical Society: Series B (in press).
 }
 
 \examples{

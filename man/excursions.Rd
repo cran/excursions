@@ -1,7 +1,8 @@
 \name{excursions}
 \alias{excursions}
 \title{
-  Excursion and contour sets for latent Gaussian models
+  Excursion sets and contour credible regions for latent Gaussian
+models
 }
 \description{
   \code{excursions} is used for calculating excursion sets, contour
@@ -73,8 +74,7 @@ excursions(alpha, u, mu, Q, type, n.iter=10000, Q.chol, vars,
 }
 
 \references{
-Bolin, D. and Lindgren, F. (2013) \emph{Excursion sets and contour
-  credible regions for latent Gaussian models}, ArXiv preprint.
+Bolin, D. and Lindgren, F. (2013) \emph{Excursion and contour uncertainty regions for latent Gaussian models}, Journal of the Royal Statistical Society: Series B (in press).
 }
 
 \examples{

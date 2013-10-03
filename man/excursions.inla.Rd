@@ -57,6 +57,10 @@ excursions.inla(result.inla, ind=NULL, method, alpha=1, u, type,
   Finn Lindgren \email{finn.lindgren@gmail.com}
 }
 
+\references{
+Bolin, D. and Lindgren, F. (2013) \emph{Excursion and contour uncertainty regions for latent Gaussian models}, Journal of the Royal Statistical Society: Series B (in press).
+}
+
 \examples{
 ## In this example, we calculate the excursion function 
 ## for a partially observed AR process.

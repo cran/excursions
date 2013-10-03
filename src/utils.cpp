@@ -232,7 +232,7 @@ void Qinv(int * Rir, int * Rjc, double * Rpr, double * variances, int n){
 	vector<size_t> nnz(n,1);
 	for(i=0; i<n; ++i){
 		//first find the indices of the non-zero elements
-		for(pos=++(R[i].begin()); pos!=R[i].end(); ++pos){
+		for(pos=R[i].begin(), ++pos; pos!=R[i].end(); ++pos){
 			nnz[i]++;
 			nnz[pos->first]++;
 		}
@@ -256,7 +256,7 @@ void Qinv(int * Rir, int * Rjc, double * Rpr, double * variances, int n){
 	while(i>0){
 		--i;
 		//first find the indices of the non-zero elements
-		for(pos=++(R[i].begin()), j=0; pos!=R[i].end(); ++pos, j++){
+		for(pos=R[i].begin(), ++pos, j=0; pos!=R[i].end(); ++pos, j++){
 			ii[j] = pos->first; //index of elements
 			s[j] = 0; //set values to zero
 			iQpos[j] = iQstart[ii[j]]; //start of each iQ row
@@ -267,7 +267,7 @@ void Qinv(int * Rir, int * Rjc, double * Rpr, double * variances, int n){
 		for(int j2=0; j2<(R[i].size()-1); ++j2){
 			Qvectype::iterator iQpos_tmp = iQpos[j2];
 			Qvectype::iterator iQend = iQ[ii[j2]].end();
-			for(pos=++(R[i].begin()); pos!=R[i].end(); ++pos){
+			for(pos=R[i].begin(), ++pos; pos!=R[i].end(); ++pos){
 				for(;iQpos_tmp != iQend && iQpos_tmp->first < pos->first; ++iQpos_tmp){}
 				if(iQpos_tmp != iQend && iQpos_tmp->first == pos->first)
 					s[j2] += (iQpos_tmp->second) * (pos->second);
@@ -276,7 +276,7 @@ void Qinv(int * Rir, int * Rjc, double * Rpr, double * variances, int n){
 			
 		//the diagonal elements
 		double diag = D[i];
-		for(pos=++(R[i].begin()), j=0; pos!=R[i].end(); ++pos, ++j)
+		for(pos=R[i].begin(), ++pos, j=0; pos!=R[i].end(); ++pos, ++j)
 			diag += s[j] * (pos->second);
 		
 		//add the elements to iQ
