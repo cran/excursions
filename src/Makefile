@@ -7,8 +7,8 @@ SUBDIRS = CHOLMOD COLAMD AMD CAMD SuiteSparse_config
 
 PKG_CFLAGS = $(SHLIB_OPENMP_CFLAGS) $(IEXTLIBS)
 PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS) $(IEXTLIBS)
-LDFLAGS = $(ALL_CXXFLAGS)
-
+PKG_LD = $(CXX)
+PKG_LDFLAGS = $(ALL_CXXFLAGS) 
 ALL_LIBS = $(E_LIBS) ${LAPACK_LIBS} ${BLAS_LIBS} ${FLIBS} -lm
 
 all : excursions gaussint
@@ -16,11 +16,11 @@ all : excursions gaussint
 EXCURSIONS_OBJ = excursions.o integration.o utils.o RngStream.o \
 			gsl_fix.o xerbla.o
 excursions : $(EXCURSIONS_OBJ) $(E_LIBS)
-	$(CXX) $(LDFLAGS) $(LEXTLIBS) -o $@ $(EXCURSIONS_OBJ) $(ALL_LIBS)
+	$(PKG_LD) $(MAIN_LDFLAGS) $(LDFLAGS) $(PKG_LDFLAGS) $(LEXTLIBS) -o $@ $(EXCURSIONS_OBJ) $(ALL_LIBS)
 
 GAUSSINT_OBJ = gaussint.o integration.o utils.o RngStream.o gsl_fix.o xerbla.o
 gaussint : $(GAUSSINT_OBJ) $(E_LIBS)
-	$(CXX) $(LDFLAGS) $(LEXTLIBS) -o $@ $(GAUSSINT_OBJ) $(ALL_LIBS) 
+	$(PKG_LD) $(MAIN_LDFLAGS) $(LDFLAGS) $(PKG_LDFLAGS) $(LEXTLIBS) -o $@ $(GAUSSINT_OBJ) $(ALL_LIBS) 
 
 CHOLMOD.a:
 	(cd CHOLMOD && CFLAGS="$(CFLAGS)" CXXFLAGS="$(CXXFLAGS)" \

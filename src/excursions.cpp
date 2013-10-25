@@ -269,8 +269,8 @@ int main (int argc, char * const argv[]) {
 		fclose(pFile);
 		for(i=0; i<n; i++){
 			if(ind[i]==0){
-				rho[i]=0;
-				rho_ng[i] = 0;
+				rho[i]=-1.0;
+				rho_ng[i] = -1.0;
 			} 
 		}
 	} 
@@ -313,7 +313,9 @@ int main (int argc, char * const argv[]) {
 		 * Set alpha > 0.5 if interested in F(s).
 		 */
 		
-		if ( (type==2 && alpha < 0.5) || (type != 2 && alpha < 1) ) {
+		//if ( (type==2 && alpha < 0.5) || (type != 2 && alpha < 1) ) {
+		if ( ind_p || alpha < 1 ) {
+		
 			int * cindr = new int[n];
 			int * cind = new int[n];
 			
@@ -323,7 +325,7 @@ int main (int argc, char * const argv[]) {
 			 */
 			int k=0;
 			i = n-1;
-			if (alpha < 0.5) {
+			if (0){//(alpha < 0.5) {
 				while (rho_sort[i] > 1-alpha/(i+1) && i>=0){ 
 					cindr[i] = k;
 					i--;
@@ -331,7 +333,7 @@ int main (int argc, char * const argv[]) {
 				if (i<n-1) {
 					k=1;
 				}
-			}
+			} 
 			// Add nodes in order down to the lower bound
 			while (rho_sort[i] > 1 - alpha &&  i>=0) {
 				cindr[i] = k; 

@@ -12,7 +12,7 @@
 	dx
  } 
  A limit value \eqn{alpha} can be used to stop the integration if the
- value is below this value.
+ value is below \eqn{1-alpha}.
 }
 \usage{
 excursions.int(mu, Q, a, b, n.iter=10000, Q.chol, ind,
@@ -31,9 +31,9 @@ excursions.int(mu, Q, a, b, n.iter=10000, Q.chol, ind,
 	\item{ind}{Indices of the nodes that should be analyzed
 	  (optional)}
 	\item{verbose}{Set to TRUE for verbose mode (optional)}
-	\item{alpha}{Lower bound for value of integral, the integration
+	\item{alpha}{If this argument is used, the integration
 	  is stopped and 0 is returned if the estimated value goes
-	  bellow this limit.}
+	  below \eqn{1-alpha}.}
 	   \item{max.threads}{Decides the number of threads the program can use. Set to 0 for using the maximum number of threads allowed by the system (default).}
 }
 \value{
