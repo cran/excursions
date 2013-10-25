@@ -1,4 +1,4 @@
-44931ea3816684419f19ae7c5b047003 *DESCRIPTION
+049f158350c2e3139d1a9651eaba2770 *DESCRIPTION
 08e37471b9ce44fd6a49606b5c2aec69 *NAMESPACE
 cce3579171466307b6ec291412697d97 *R/excursions.R
 1a6d4d34dec31b424dfd82cd56785b9b *R/excursions.inla.R
@@ -15,7 +15,7 @@ e4f8cd28fc8be8ab14106630610b9c5f *inst/doc/copying/CHOLMOD.txt
 77ad62478225b2d48fa1a7fddc773bfb *inst/doc/copying/SuiteSparse_config.txt
 2b98f345e75ead8a1bade3fb9c99265c *man/excursions.Rd
 ce68b613b8c7bdd6c7f3ddf61330322b *man/excursions.inla.Rd
-39a2b5fc2eb168dd4bda30128cbf7d9c *man/excursions.int.Rd
+ec671612510ac22de9c619bb69cfe254 *man/excursions.int.Rd
 605ea7081ec0cd26077cdcc2581d9912 *man/excursions.simconf.Rd
 748cb59bc376e554cf5c5858fd2d7950 *src/AMD/Include/amd.h
 a881b2f2e24554938426f151e8cee315 *src/AMD/Include/amd_internal.h
@@ -36,14 +36,11 @@ d696467688131d58e3acf9e5a627360e *src/AMD/Source/amd_postorder.c
 56f64a3203f5752b5a012b806f101d8c *src/AMD/Source/amd_valid.c
 addde010ddd6b0dd973dd110fb760c26 *src/AMD/Source/make-Make.R
 fb72579361b37fe421cb34b65b9b7b3f *src/AMD/Source/make_o.mk
-5be5db8ccb99f88f234639b97d8227c5 *src/CAMD/Include/SuiteSparse_config.h
 a67d85c7c9d897ffc7ffbce371f960ae *src/CAMD/Include/camd.h
 bd3311990b38188ba818da04b35eae62 *src/CAMD/Include/camd_internal.h
-5ab3405cf7faa3d825c719879536093d *src/CAMD/Lib/GNUmakefile
-92de6841a21c33fac884580f8a3e34ac *src/CAMD/Lib/Makefile
-3ad8c5a18eea21dc2a8d1363e8a68334 *src/CAMD/Lib/libcamd.def
-feb2460ae99a7420f8c04d7f0e67af8a *src/CAMD/Makefile
+8aec48ffe7b62d44376f6f161f90104b *src/CAMD/Makefile
 ef62d2e0b431fc69e8cdfa7494bf79a1 *src/CAMD/README.txt
+69997471a2693d7edf36f79592a1eb1a *src/CAMD/Source/Makefile
 8da0edddecbf569cdd3d980e944b2b20 *src/CAMD/Source/camd_1.c
 59f01928012e76e8142299438f430aaf *src/CAMD/Source/camd_2.c
 34e2842a619992e351ec23cc1dca516b *src/CAMD/Source/camd_aat.c
@@ -56,6 +53,7 @@ a36512a98ca13cf7e80840fc903b7695 *src/CAMD/Source/camd_info.c
 5944d81d9bf191abf95bcdd45a24a13e *src/CAMD/Source/camd_postorder.c
 f4c8a55abfeec00fca1535adba716f5a *src/CAMD/Source/camd_preprocess.c
 e0654ea46fed28b3ffad547e42060310 *src/CAMD/Source/camd_valid.c
+fabd69f6bfb0ee64e7269bc39a785934 *src/CAMD/Source/make_o.mk
 d2d49c52f19cae17de0efe9bbd0e50b0 *src/CHOLMOD/Check/License.txt
 d7fc70cb708c59d1d32e157790bceead *src/CHOLMOD/Check/cholmod_check.c
 eff565a1144bd2dba2d0a9757e50b481 *src/CHOLMOD/Check/cholmod_read.c
@@ -160,8 +158,7 @@ e14e53d0b36e1d0647348a326e8b3b54 *src/COLAMD/Include/colamd.h
 a40eda898c98a8b193aae541a40e16b8 *src/COLAMD/Source/Makefile
 ed584482056a57c97c84f0f2701f76a6 *src/COLAMD/Source/colamd.c
 d9b27cdbf6cd3a08a921754ba6acbfc0 *src/COLAMD/Source/colamd_global.c
-58ac57ac81d5205339e08379eb8d3976 *src/Makefile
-a33c9cbd73b7867781c38ff031d7874d *src/Makefile.orig
+4080224b1b32695c49d4287217323052 *src/Makefile
 03863ebfb02bc0223a8836a309fc22e9 *src/Makefile.win
 5dd24a5b87774e2545942f3842f27b18 *src/RngStream.c
 2066aaf90fbd799ea1682300c263e99a *src/RngStream.h
@@ -169,7 +166,7 @@ ac8ec26aa8fd840f64bbc99ef9f4c909 *src/SuiteSparse_config/Makefile
 c5e2cbbc99bb9c5fb3e9b9729f36116f *src/SuiteSparse_config/SuiteSparse_config.c
 07ada98837bde04fda62ccf91632758a *src/SuiteSparse_config/SuiteSparse_config.h
 d41d8cd98f00b204e9800998ecf8427e *src/SuiteSparse_config/SuiteSparse_config.mk
-e254f32bcdbf47c653fa906cf830f5b7 *src/excursions.cpp
+c13a314b7a2323786615d443ed4b3b8d *src/excursions.cpp
 ff1157bbbb57e28e91b78789fd4ee6bf *src/gaussint.cpp
 32c7ac26ef53b653b5ae9d73d3f7f98b *src/gsl_fix.c
 daf1515789a43612fde3979ab7cb395c *src/gsl_fix.h
