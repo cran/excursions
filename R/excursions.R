@@ -184,7 +184,7 @@ if (ind_p == 1){
 #%%%%%%%%%%%%%%%%%%%%%%
 # Do the calculations %
 #%%%%%%%%%%%%%%%%%%%%%%
-private.excursions.call(tmppath,"excursions")
+private.excursions.call(gsub("/*$", "/", tmppath),"excursions")
 
 #%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 # Read results and save data %

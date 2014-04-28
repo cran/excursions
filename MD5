@@ -1,8 +1,8 @@
-049f158350c2e3139d1a9651eaba2770 *DESCRIPTION
+699617a0230c59ecb7b14a177f569394 *DESCRIPTION
 08e37471b9ce44fd6a49606b5c2aec69 *NAMESPACE
-cce3579171466307b6ec291412697d97 *R/excursions.R
-1a6d4d34dec31b424dfd82cd56785b9b *R/excursions.inla.R
-14cf30d82ed5334ba6a4ef32fa23c96e *R/excursions.int.R
+3949d56ce2b14a5645481d0ca7c76a10 *R/excursions.R
+50cf277f03dd9b3db13df671c663e2fc *R/excursions.inla.R
+45ebb9f65852b8600b7d6ba4744120ed *R/excursions.int.R
 044a76cc6fbe961865968a1275e330ae *R/excursions.simconf.R
 a6bb4dcf766fa9e91a2b7603beb668f8 *R/utils.R
 46b22fc19328f25856f09949274c95a5 *inst/COPYRIGHTS
@@ -166,8 +166,8 @@ ac8ec26aa8fd840f64bbc99ef9f4c909 *src/SuiteSparse_config/Makefile
 c5e2cbbc99bb9c5fb3e9b9729f36116f *src/SuiteSparse_config/SuiteSparse_config.c
 07ada98837bde04fda62ccf91632758a *src/SuiteSparse_config/SuiteSparse_config.h
 d41d8cd98f00b204e9800998ecf8427e *src/SuiteSparse_config/SuiteSparse_config.mk
-c13a314b7a2323786615d443ed4b3b8d *src/excursions.cpp
-ff1157bbbb57e28e91b78789fd4ee6bf *src/gaussint.cpp
+cbf7252924292dc73c7dff69771d32f5 *src/excursions.cpp
+1d19c02c0ba59b48f102e5f6bf93ce60 *src/gaussint.cpp
 32c7ac26ef53b653b5ae9d73d3f7f98b *src/gsl_fix.c
 daf1515789a43612fde3979ab7cb395c *src/gsl_fix.h
 27811ae48e5f900cc2fda0f2a81b9a9b *src/install.libs.R

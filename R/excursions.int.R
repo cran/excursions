@@ -106,7 +106,7 @@ if (ind_p == 1){
 }
 
 # Do the calculations
-private.excursions.call(tmppath,"gaussint")
+private.excursions.call(gsub("/*$", "/", tmppath),"gaussint")
 
 # Read results and save data
 fid <- file(file.path(tmppath,"results.bin"), "rb")

@@ -42,13 +42,28 @@ int main (int argc, char * const argv[]) {
 		
 	/* Read parameters */
 	pFile = fopen((path + "initdata.bin").c_str(), "rb");
-	fread(&alpha,1,sizeof(double),pFile);
-	fread(&n_itr,1,sizeof(int),pFile);
-	fread(&chol,1,sizeof(int),pFile);
-	fread(&ind_p,1,sizeof(int),pFile);
-	fread(&max_size,1,sizeof(int),pFile);
-	fread(&verbose,1,sizeof(int),pFile);
-	fread(&n_threads,1,sizeof(int),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(1!=fread(&alpha,sizeof(double),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&n_itr,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&chol,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&ind_p,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&max_size,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&verbose,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1!=fread(&n_threads,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
 	fclose (pFile);
 	
 	/* Read precision matrix */
@@ -79,15 +94,24 @@ int main (int argc, char * const argv[]) {
 	convert_to_ccs(&Q,&Qt,n,nz,&cm);
 	
 	pFile = fopen((path+"mu.bin").c_str(), "rb");
-	fread(mu,n,sizeof(double),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fread(mu,sizeof(double),n,pFile)){
+		fputs ("Read error mu\n",stderr); exit (1);
+	}
 	fclose(pFile);
 
 	pFile = fopen((path+"a.bin").c_str(), "rb");
-	fread(a,n,sizeof(double),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fread(a,sizeof(double),n,pFile)){
+		fputs ("Read error a\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	
 	pFile = fopen((path+"b.bin").c_str(), "rb");
-	fread(b,n,sizeof(double),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fread(b,sizeof(double),n,pFile)){
+		fputs ("Read error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	
 	for(i=0;i<n;i++){
@@ -101,7 +125,10 @@ int main (int argc, char * const argv[]) {
 			cout << "Calculating reordering..." << endl;
 		}	
 		pFile = fopen((path+"ind.bin").c_str(), "rb");
-		fread(ind,n,sizeof(int),pFile);
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if(n!=fread(ind,sizeof(int),n,pFile)){
+			fputs ("Read error ind\n",stderr); exit (1);
+		}
 		fclose(pFile);
 		
 		// use CAMD to find ordering
@@ -190,7 +217,10 @@ int main (int argc, char * const argv[]) {
 	}
 	
 	pFile = fopen((path+"results.bin").c_str(), "wb");
-	fwrite(result, sizeof(double), 2, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(2!=fwrite(result, sizeof(double), 2, pFile)){
+		fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 
 	delete[] result;

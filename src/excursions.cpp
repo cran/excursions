@@ -34,7 +34,8 @@ int main (int argc, char * const argv[]) {
 	 vars: 	posterior variances V(X(s))
 	 rho = 	marginal probabilities P(X(s)>u)
 	 n_itr = number of MC iterations
-	 type:	0 = positive excursion '>', 1= negative excursion '<', 2= contour uncertainty
+	 type:	0 = positive excursion '>', 1= negative excursion '<', 
+	 		2= contour uncertainty, 3= contour map
 	 reo:	reordering
 	 Q:		precision matrix or its cholesky factor
 	 chol:	1=Q is cholesky factor, 0= Q is precision
@@ -97,18 +98,44 @@ int main (int argc, char * const argv[]) {
 	
 	/* Read parameters */
 	pFile = fopen((path + "initdata.bin").c_str(), "rb");
-	fread(&alpha,1,sizeof(double),pFile);
-	fread(&u,1,sizeof(double),pFile);
-	fread(&n_itr,1,sizeof(int),pFile);
-	fread(&type,1,sizeof(int),pFile);
-	fread(&chol,1,sizeof(int),pFile);
-	fread(&rho_p,1,sizeof(int),pFile);
-	fread(&reo_p,1,sizeof(int),pFile);
-	fread(&vars_p,1,sizeof(int),pFile);
-	fread(&ind_p,1,sizeof(int),pFile);
-	fread(&max_size,1,sizeof(int),pFile);
-	fread(&verbose,1,sizeof(int),pFile);
-	fread(&n_threads,1,sizeof(int),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	
+	if(1 != fread(&alpha,sizeof(double),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 != fread(&u,sizeof(double),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 != fread(&n_itr,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&type,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&chol,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&rho_p,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&reo_p,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&vars_p,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&ind_p,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&max_size,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 !=  fread(&verbose,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}
+	if(1 != fread(&n_threads,sizeof(int),1,pFile)){
+		fputs ("Read error initdata\n",stderr); exit (1);
+	}	
 	fclose (pFile);
 	
 	/* Read precision matrix */
@@ -146,7 +173,10 @@ int main (int argc, char * const argv[]) {
 	convert_to_ccs(&Q,&Qt,n,nz,&cm);
 	/* Read mean */
 	pFile = fopen((path+"mu.bin").c_str(), "rb");
-	fread(mu,n,sizeof(double),pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if( n!= fread(mu,sizeof(double),n,pFile)){
+		fputs ("Read error mu\n",stderr); exit (1);
+	}
 	fclose(pFile);
 
 	if(verbose==1){
@@ -160,7 +190,10 @@ int main (int argc, char * const argv[]) {
 	/* Read or calculate variances */
 	if (vars_p==1) { // read variances
 		pFile = fopen((path+"vars.bin").c_str(), "rb");
-		fread(vars,n,sizeof(double),pFile);
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if(n!=fread(vars,sizeof(double),n,pFile)){
+			fputs ("Read error vars\n",stderr); exit (1);
+		}
 		fclose(pFile);
 	} else { // calculate variances
 		if (chol==1) {
@@ -198,7 +231,10 @@ int main (int argc, char * const argv[]) {
 	if (type ==2) { // contour uncertainty
 		if (rho_p==1) {
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
-			fread(rho_u,n,sizeof(double),pFile);
+			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+			if (n!= fread(rho_u,sizeof(double),n,pFile)){
+				fputs ("Read error rho\n",stderr); exit (1);
+			}
 			fclose(pFile);	
 			for (i=0; i<n; i++) {
 				rho_l[i] = 1-rho_u[i];
@@ -214,7 +250,10 @@ int main (int argc, char * const argv[]) {
 		} else if (rho_p == 2) { // QC method
 			//Read non-gaussian probabilities
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
-			fread(rho_ngu,n,sizeof(double),pFile);
+			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+			if(n != fread(rho_ngu,n,sizeof(double),pFile)){
+				fputs ("Read error rho_ngu\n",stderr); exit (1);
+			}
 			fclose(pFile);
 				
 			//calculate gaussian
@@ -226,12 +265,21 @@ int main (int argc, char * const argv[]) {
 				rho_ng[i] = max(rho_ngu[i],1-rho_ngu[i]);
 				
 			}
-			
 		}
+	} else if (type == 3){ // contour function
+		pFile = fopen((path+"rho.bin").c_str(), "rb");
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if(n != fread(rho,sizeof(double),n,pFile)){
+			fputs ("Read error rho\n",stderr); exit (1);
+		}
+		fclose(pFile);	
 	} else {
 		if (rho_p==1) {
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
-			fread(rho,n,sizeof(double),pFile);
+			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+			if (n != fread(rho,n,sizeof(double),pFile)){
+				fputs ("Read error rho\n",stderr); exit (1);
+			}
 			fclose(pFile);		
 		} else if (rho_p == 0){
 			if (type == 0) { // positive excursion
@@ -248,7 +296,10 @@ int main (int argc, char * const argv[]) {
 		} else if (rho_p == 2) {
 			//read non-Gaussian probabilities
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
-			fread(rho_ng,n,sizeof(double),pFile);
+			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+			if (n != fread(rho_ng,sizeof(double),n,pFile)){
+				fputs ("Read error rho_ng\n",stderr); exit (1);
+			}
 			fclose(pFile);	
 			//calculate Gaussian
 			for (i=0;i<n;i++) {
@@ -265,11 +316,14 @@ int main (int argc, char * const argv[]) {
 		 * that are not considered.
 		*/
 		pFile = fopen((path+"ind.bin").c_str(), "rb");
-		fread(ind,n,sizeof(int),pFile);
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if (n != fread(ind,sizeof(int),n,pFile)){
+			fputs ("Read error ind\n",stderr); exit (1);
+		}
 		fclose(pFile);
 		for(i=0; i<n; i++){
 			if(ind[i]==0){
-				rho[i]=-1.0;
+				rho[i]= -1.0;
 				rho_ng[i] = -1.0;
 			} 
 		}
@@ -292,7 +346,10 @@ int main (int argc, char * const argv[]) {
 	/* Read or calculate permutation */	
 	if (reo_p==1) {
 		pFile = fopen((path+"reo.bin").c_str(), "rb");
-		fread(reo,n,sizeof(int),pFile);
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if (n!= fread(reo,sizeof(int),n,pFile)){
+			fputs ("Read error reo\n",stderr); exit (1);
+		}
 		fclose(pFile);
 	} else {
 		/*
@@ -319,12 +376,14 @@ int main (int argc, char * const argv[]) {
 			int * cindr = new int[n];
 			int * cind = new int[n];
 			
+			
+			int k=0;
+			i = n-1;
 			/*
 			 * If alpha > 0.5, use upper and lower bounds, else only 
 			 * upper bound: Using a lower bound does not work for F(s).
 			 */
-			int k=0;
-			i = n-1;
+			/*
 			if (0){//(alpha < 0.5) {
 				while (rho_sort[i] > 1-alpha/(i+1) && i>=0){ 
 					cindr[i] = k;
@@ -334,29 +393,40 @@ int main (int argc, char * const argv[]) {
 					k=1;
 				}
 			} 
+			*/
 			// Add nodes in order down to the lower bound
 			while (rho_sort[i] > 1 - alpha &&  i>=0) {
 				cindr[i] = k; 
 				i--;
 				k++;
 			}
+
 			if(i>0){
 				// Reorder nodes below the lower bound for sparsity
 				while (i>=0) {
 					cindr[i] = k;
 					i--;
 				}
-		
+				
 				// change back to original ordering before calling camd:			
 				for (i=0; i<n; i++) {
 					cind[i] = k - cindr[ireo[i]];
 				}
-				// use CAMD to find ordering
-				double Control [CAMD_CONTROL], Info [CAMD_INFO];
-				camd_l_defaults(Control);
-				int * reo2 = new int[n];
 				
-				camd_order(n,(int*)(*Qt).p,(int*)(*Qt).i,reo2,Control, Info, cind);
+				// use CAMD to find ordering
+				//double Control [CAMD_CONTROL], Info [CAMD_INFO];
+				
+				//camd_l_defaults(Control);
+				//camd_defaults(Control);
+				int * reo2 = new int[n];
+				if(verbose==1){
+					cout << "call CAMD...";
+				}
+				//int status = camd_order(n,(int*)(*Qt).p,(int*)(*Qt).i,reo2,Control, Info, cind);
+				int status = camd_order(n,(int*)(*Qt).p,(int*)(*Qt).i,reo2,(double *) NULL, (double *) NULL, cind);
+				if(verbose==1){
+					cout << " done." << endl;
+				}
 				memcpy(reo, reo2, n*sizeof(int));
 				
 			}
@@ -365,6 +435,15 @@ int main (int argc, char * const argv[]) {
 		}
 	}	
 	
+	if (ind_p==1){
+		for(i=0; i<n; i++){
+			if(ind[i]==0){
+				rho[i]= 0.0; //change from -1 to 0 to avoid nan
+				rho_ng[i] = 0.0;
+			} 
+		}
+	} 
+	
 #ifdef TIMING
 	time_comp_reo += static_cast<double>(clock()-start) / ticks_per_ms;
 	start = clock();
@@ -372,21 +451,25 @@ int main (int argc, char * const argv[]) {
 	
 	/* 
 	 * Set limit vectors for integral 
-	 */		
-	for (i=0; i<n; i++) {	// set uv depending on if QC method is used.
-		if(rho_p == 2){
-			if (type==1) { //negative
-				uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Pinv(rho_ng[i]);
-			} else if (type==0){ //positive or contour
-				uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Qinv(rho_ng[i]);
+	 */	
+	if(verbose==1){
+		cout << "Set limit vectors..." << endl;	
+	}
+	if(type != 3){	
+		for (i=0; i<n; i++) {	// set uv depending on if QC method is used.
+			if(rho_p == 2){
+				if (type==1) { //negative
+					uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Pinv(rho_ng[i]);
+				} else if (type==0){ //positive or contour
+					uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Qinv(rho_ng[i]);
+				} else if (type==2){ //contour
+					uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Qinv(rho_ngu[i]);
+				}
 			} else {
-				uv[i] = sqrt(vars[i])*gsl_cdf_ugaussian_Qinv(rho_ngu[i]);
-			}
-		} else {
 			uv[i] = u-mu[i];
+			}
 		}
 	}
-	
 	if (type == 2) { //contour region
 		if(rho_p ==2){
 			for (i=0;i<n;i++) {
@@ -411,6 +494,20 @@ int main (int argc, char * const argv[]) {
 			a[i] = -numeric_limits<double>::infinity();
 			b[i] = uv[i];
 		}
+	} else if (type == 3){
+		//read limit vectors from file
+		pFile = fopen((path+"a.bin").c_str(), "rb");
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if (n != fread(a,sizeof(double),n,pFile)){
+			fputs ("Read error a\n",stderr); exit (1);
+		}
+		fclose(pFile);
+		pFile = fopen((path+"b.bin").c_str(), "rb");
+		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+		if (n != fread(b,n,sizeof(double),pFile)){
+			fputs ("Read error b\n",stderr); exit (1);
+		}
+		fclose(pFile);
 	}
 	
 	/*
@@ -510,19 +607,34 @@ if(verbose==1){
 #endif
 	
 	pFile = fopen((path+"results_p.bin").c_str(), "wb");
-	fwrite(Pv, sizeof(double), n, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fwrite(Pv, sizeof(double), n, pFile)){
+	fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	pFile = fopen((path+"results_e.bin").c_str(), "wb");
-	fwrite(Ev, sizeof(double), n, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fwrite(Ev, sizeof(double), n, pFile)){
+	fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	pFile = fopen((path+"results_rho.bin").c_str(), "wb");
-	fwrite(rho, sizeof(double), n, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fwrite(rho, sizeof(double), n, pFile)){
+	fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	pFile = fopen((path+"results_reo.bin").c_str(), "wb");
-	fwrite(reo, sizeof(int), n, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fwrite(reo, sizeof(int), n, pFile)){
+	fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	pFile = fopen((path+"vars.bin").c_str(), "wb");
-	fwrite(vars, sizeof(double), n, pFile);
+	if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
+	if(n!=fwrite(vars, sizeof(double), n, pFile)){
+	fputs ("Write error b\n",stderr); exit (1);
+	}
 	fclose(pFile);
 	
 #ifdef TIMING

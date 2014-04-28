@@ -94,7 +94,8 @@ for(i in 1:n.theta){
 	if (result.inla$misc$configs$config[[i]]$log.posterior == 0){
 		mu.p=result.inla$misc$configs$config[[i]]$mean
 		Q.p=result.inla$misc$configs$config[[i]]$Q
-		vars = diag(INLA::inla.qinv(Q.p))
+		#vars = diag(INLA::inla.qinv(Q.p))
+		vars = diag(result.inla$misc$configs$config[[i]]$Qinv)
 	}
 }
 
@@ -142,7 +143,8 @@ if(method == 'EB' || method == 'QC' ){
 		}
 		mu.p=result.inla$misc$configs$config[[i]]$mean
 		Q.p=result.inla$misc$configs$config[[i]]$Q
-		vars = diag(INLA::inla.qinv(Q.p))
+		#vars = diag(INLA::inla.qinv(Q.p))
+		vars = diag(result.inla$misc$configs$config[[i]]$Qinv)
 		lw[i] = result.inla$misc$configs$config[[i]]$log.posterior
 		res[[i]] = excursions(alpha=alpha,u=0,mu=mu.p-u.t,Q=Q.p,type=type,
 							  method=qc,rho=pfam,vars=vars,
@@ -182,7 +184,8 @@ if(method == 'EB' || method == 'QC' ){
 		}
 		mu.p=result.inla$misc$configs$config[[i]]$mean
 		Q.p=forceSymmetric(result.inla$misc$configs$config[[i]]$Q)
-		vars = diag(INLA::inla.qinv(Q.p))
+		#vars = diag(INLA::inla.qinv(Q.p))
+		vars = diag(result.inla$misc$configs$config[[i]]$Qinv)
 		lw[i] = result.inla$misc$configs$config[[i]]$log.posterior
 		r.i <- INLA::inla(result.inla$.args$formula,
                                   family = result.inla$.args$family,
