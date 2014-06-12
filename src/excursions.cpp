@@ -161,8 +161,10 @@ int main (int argc, char * const argv[]) {
 	int * ireo = new int[n];
 	int * ind = new int[n];
 
-	memset(Pv,0,n);
-	memset(Ev,0,n);
+	for(int i=0;i<n;i++){
+		Pv[i] = 0.0;
+		Ev[i] = 0.0;
+	}
 	
 	cholmod_common cm ;
 	cholmod_start (&cm);
@@ -251,7 +253,7 @@ int main (int argc, char * const argv[]) {
 			//Read non-gaussian probabilities
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
 			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
-			if(n != fread(rho_ngu,n,sizeof(double),pFile)){
+			if(n != fread(rho_ngu,sizeof(double),n, pFile)){
 				fputs ("Read error rho_ngu\n",stderr); exit (1);
 			}
 			fclose(pFile);
@@ -277,7 +279,7 @@ int main (int argc, char * const argv[]) {
 		if (rho_p==1) {
 			pFile = fopen((path+"rho.bin").c_str(), "rb");
 			if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
-			if (n != fread(rho,n,sizeof(double),pFile)){
+			if (n != fread(rho,sizeof(double),n,pFile)){
 				fputs ("Read error rho\n",stderr); exit (1);
 			}
 			fclose(pFile);		
@@ -504,7 +506,7 @@ int main (int argc, char * const argv[]) {
 		fclose(pFile);
 		pFile = fopen((path+"b.bin").c_str(), "rb");
 		if (pFile==NULL) {fputs ("File error",stderr); exit (1);}
-		if (n != fread(b,n,sizeof(double),pFile)){
+		if (n != fread(b,sizeof(double),n,pFile)){
 			fputs ("Read error b\n",stderr); exit (1);
 		}
 		fclose(pFile);
@@ -513,7 +515,7 @@ int main (int argc, char * const argv[]) {
 	/*
 	 * Calculate excursion function and first Cholesky factor if needed.
 	 */	
-	if(reo_p==0 && chol ==0){ 
+	if(chol == 0){//(reo_p==0 && chol ==0){ 
 	//reorder, calculate Choleksy factor, and then calculate excursion function
 		
 		if(verbose==1){
@@ -563,7 +565,7 @@ int main (int argc, char * const argv[]) {
 		time_comp_int += static_cast<double>(clock()-start) / ticks_per_ms;
 		#endif
 		
-	} else if (reo_p == 1 && chol ==0) { 
+	} else if (0){//(reo_p == 1 && chol ==0) { 
 	// Calculate Cholesky factor and then calculate excursion function
 		if(verbose==1){
 			cout << "Calculating Cholesky factor..." << endl;

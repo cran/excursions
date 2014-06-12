@@ -201,9 +201,9 @@ if(method == 'EB' || method == 'QC' ){
 									private.link.function(x,links[i],inv=TRUE),
 									r.i$marginals.fitted.values[[j]])))
 		pfam.i[ind] = p1.i
-		res[[i]] = excursions(alpha=alpha,u=0,mu=mu.p[reo]-u.t[reo],
-							Q=Q.p[reo,reo], type=type, method='QC',
-							  rho=pfam.i[reo], vars=vars[reo],
+		res[[i]] = excursions(alpha=alpha,u=0,mu=mu.p-u.t,
+							Q=Q.p, type=type, method='QC',
+							  rho=pfam.i, vars=vars,
 							  max.size=length(ind),reo=reo,
 							  n.iter=n.iter,max.threads=max.threads)
 	}

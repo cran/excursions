@@ -217,37 +217,25 @@ if (!keep) {
     unlink(tmppath, recursive=TRUE)
 }
 
-ind = ind + 1;
+ind = ind + 1
 
-ii = 1;
-while (Pv[ii]==0 && ii<n) {
-	ii = ii+1
-}
-i = ii
+ii = which(Pv[1:n] > 0)
+if (length(ii) == 0) i=n+1 else i=min(ii)
 
-D = rep(0,n)
-F = rep(0,n)
-Fe = rep(0,n)
-rho_sort = rep(0,n)
+F = Fe  = rep(0,n)
+F[ind] = Pv
+Fe[ind] = Ev
 
-for(ii in i:n){
-	D[ind[ii]] = 1
-}
-for(ii in 1:n){
-	rho_sort[ind[ii]] = rho[ii]
-	F[ind[ii]] = Pv[ii]
-	Fe[ind[ii]] = Ev[ii]
-}
-
-ireo = NULL;
+ireo = NULL
 ireo[ind] = 1:n
 
 if(type == '='){
 	F=1-F
 	D = rep(1,n)
-	for(ii in i:n){
-		D[ind[ii]] = 0
-	}
+	if(i<n+1) D[ind[i:n]] = 0
+} else {
+	D = rep(0,n)
+	if(i<n+1) D[ind[i:n]] = 1
 }
 
 if (keep) {

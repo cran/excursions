@@ -39,7 +39,10 @@ void shapeInt(vector< map<int,double> > * L, double * a,double * b,int K, const 
 		al[i] = Li[i]*a[i];
 		bl[i] = Li[i]*b[i];
 		x[i] = new double[K];
-		memset(x[i], 0, n);
+		//memset(x[i], 0, n);
+		for(j=0;j<K;j++){
+			x[i][j] = 0.0;
+		}
 	}
 	
 	for (i=0; i<K; i++) {
@@ -200,7 +203,7 @@ void shapeInt(vector< map<int,double> > * L, double * a,double * b,int K, const 
 			break;
 		}
 		Ei = sqrt(max((fsum2-fsum*fsum/K)/K/K,0));
-		
+
 		if (Pi<lim) {
 			break;
 		}

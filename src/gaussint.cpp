@@ -82,8 +82,10 @@ int main (int argc, char * const argv[]) {
 	int * ireo = new int[n];
 	int * ind = new int[n];
 
-	memset(Pv,0,n);
-	memset(Ev,0,n);
+	for(int i=0;i<n;i++){
+		Pv[i] = 0.0;
+		Ev[i] = 0.0;
+	}
 	
 	cholmod_common cm ;
 	cholmod_start (&cm);
@@ -113,7 +115,7 @@ int main (int argc, char * const argv[]) {
 		fputs ("Read error b\n",stderr); exit (1);
 	}
 	fclose(pFile);
-	
+		
 	for(i=0;i<n;i++){
 		a[i] -= mu[i];
 		b[i] -= mu[i];
