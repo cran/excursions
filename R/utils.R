@@ -98,6 +98,8 @@ excursions.marginals <- function(type, rho,vars, mu, u, QC = FALSE)
        } else {
   				rl$rho = pnorm(mu-u,sd=sqrt(vars), lower.tail=FALSE)
         }
+      } else {
+        rl$rho = rho
       }
     }
   }
@@ -180,6 +182,7 @@ excursions.setlimits <- function(marg, vars,type,QC,u,mu)
 }
 
 
+
 excursions.call <- function(a,b,reo,Q, is.chol = FALSE, lim, K, max.size,n.threads, seed,LDL=FALSE)
 {
   if(is.chol == FALSE){
@@ -205,7 +208,7 @@ excursions.call <- function(a,b,reo,Q, is.chol = FALSE, lim, K, max.size,n.threa
   return(res)
 }
 
-private.as.spam = function(A)
+private.as.spam <- function(A)
 {
   if(is(A,"spam")){
     return(A)
@@ -218,15 +221,48 @@ private.as.spam = function(A)
 }
 
 
+private.check.integer <- function(v)
+{
+  if(is.null(v)) {
+    stop("Anticipated scalar value, got NULL")
+  } else if(!is.null(dim(v))){
+    stop("Anticipated scalar value, got matrix")
+  } else if(length(v)>1) {
+    stop("Anticipated scalar value, got vector")
+  }
+}
+
+private.as.vector <- function(v)
+{
+  if(is.null(v) || is.vector(v)) {
+    return(v)
+  } else {
+    if(min(dim(v)>1)) {
+      stop("vector has wrong dimensions")
+    }
+    return(as.vector(v))
+  }
+  return(c(v))
+}
+
+private.as.Matrix <- function(M)
+{
+  if(is.null(M) || is(M,"Matrix")){
+    return(M)
+  } else {
+    return(as(M,"Matrix"))
+  }
+}
+
 ##
 # Distribution function of Gaussian mixture \Sum_k w[k]*N(mu[k],sigma[k]^2)
 ##
-Fmix = function(x,mu,sd,w) sum(w*pnorm(x,mean=mu,sd=sd))
+Fmix <- function(x,mu,sd,w) sum(w*pnorm(x,mean=mu,sd=sd))
 
 ##
 # Quantile function of Gaussian mixture
 ##
-Fmix_inv = function(p,mu,sd,w,br=c(-1000,1000))
+Fmix_inv <- function(p,mu,sd,w,br=c(-1000,1000))
 {
    G = function(x) Fmix(x,mu,sd,w) - p
    return(uniroot(G,br)$root)
@@ -330,6 +366,18 @@ fmix.samp.opt <- function(x, alpha,mu, sd, w, limits, samples)
 
 }
 
+fsamp.opt <- function(x, samples,verbose=FALSE)
+{
+  q.a = apply(samples,1,quantile,1,probs=c(x/2))
+  q.b = apply(samples,1,quantile,1,probs=c(1-x/2))
+  prob = mean(apply((samples<q.b)*(samples>q.a),2,prod))
+  if(verbose)
+    cat("in optimization: ",x," ", prob, "\n")
+  return(prob)
+
+}
+
+
 mix.sample <- function(n.samp = 1, mu,Q.chol,w)
 {
   K = length(mu)
@@ -382,4 +430,166 @@ require.nowarnings <- function(package, lib.loc = NULL, character.only = FALSE)
   on.exit(options(op))
   options(warn = -1)
   require(package, lib.loc = lib.loc, quietly = TRUE, character.only = TRUE)
+}
+
+
+
+excursions.marginals.mc <- function(X,type, rho, mu, u)
+{
+  rl = list()
+  if(type == "=" || type == "!="){
+      if(!missing(rho)){
+        rl$rho_u = rho
+      } else {
+        rl$rho_u = 1 - rowMeans(X<u)
+		  }
+		  rl$rho_l = 1-rl$rho_u
+		  rl$rho = pmax(rl$rho_u,rl$rho_l)
+  } else {
+      if(missing(rho)){
+       if(type == ">"){
+  				rl$rho = rowMeans(X>u)
+       } else {
+  				rl$rho = rowMeans(X<u)
+        }
+      }
+    }
+  return(rl)
+}
+
+mcint <- function(X,
+                  a,
+                  b,
+                  ind)
+{
+
+  if(missing(a))
+    stop('Must specify lower integration limit')
+
+  if(missing(b))
+    stop('Must specify upper integration limit')
+
+  n = length(a)
+  if(length(b) != n)
+    stop('Vectors with integration limits are of different length.')
+
+  if(!missing(ind) && !is.null(ind)){
+    a[!ind] = -Inf
+    b[!ind] = Inf
+  }
+
+  Pv = rowMeans(apply(apply(apply(a < X & X < b,2,rev),2,cumprod),2,rev))
+
+  #Estimate of MC error, not implemented yet
+  Ev <-  rep(0,n)
+
+  return(list(Pv = Pv, Ev = Ev, P = Pv[1], E = Ev[1]))
+}
+
+
+summary.excurobj <- function(object,...)
+{
+  out <- list()
+  class(out) <- "summary.excurobj"
+  out$calculation = object$meta$calculation
+  out$call = object$meta$call
+    if(object$meta$calculation == "excursions"){
+      if(object$meta$type == ">"){
+        out$computation = "Positive excursion set, E_{u,alpha}^+"
+      } else if(object$meta$type == "<"){
+         out$computation = "Negative excursion set, E_{u,alpha}^-"
+      } else if(object$meta$type == "="){
+        out$computation = "Contour credible region, E_{u,alpha}^c"
+      } else {
+        out$computation = "Contour avoiding set, E_{u,\alpha}"
+      }
+      out$u = object$meta$level
+      out$alpha = object$meta$alpha
+      out$F.limit = object$meta$F.limit
+      out$method = object$meta$method
+    } else if(object$meta$calculation == "simconf"){
+      out$computation = "Simultaneous confidence band"
+      out$alpha = object$alpha
+    } else if(object$meta$calculation == "contourmap"){
+      out$computation = "Contour map"
+      out$u = object$u
+      out$type = object$meta$contourmap.type
+      out$F.computed = object$meta$F.computed
+      if(out$F.computed)
+        out$F.limit = object$meta$F.limit
+
+      if(is.null(object$P0) && is.null(object$P1) && is.null(object$P2) &&
+         is.null(object$P0.bound) && is.null(object$P1.bound) &&
+         is.null(object$P2.bound)){
+      } else {
+        out$measures = list()
+        if(!is.null(object$P0))
+          out$measures$P0 = object$P0
+
+        if(!is.null(object$P1))
+          out$measures$P1 = object$P1
+
+       if(!is.null(object$P2))
+          out$measures$P2 = object$P2
+
+        if(!is.null(object$P0.bound))
+          out$measures$P0.bound = object$P0.bound
+
+        if(!is.null(object$P1.bound))
+          out$measures$P1.bound = object$P1.bound
+
+       if(!is.null(object$P2.bound))
+          out$measures$P2.bound = object$P2.bound
+    }
+  }
+  return(out)
+}
+
+
+print.summary.excurobj <- function(x,...)
+{
+
+  cat("Call: \n")
+  print(x$call)
+  cat("\nComputation:\n")
+  cat(x$computation,"\n\n")
+
+  if(x$calculation == "excursions"){
+    cat("Level: u = ")
+    cat(x$u,"\n")
+    cat("Error probability: alpha = ")
+    cat(x$alpha,"\n")
+    cat("Limit for excursion function computation: F.limit = ")
+    cat(x$F.limit,"\n")
+    cat("Method used : ")
+    cat(x$method,"\n")
+  } else if(x$calculation == "simconf"){
+    cat("Error probability: alpha = ")
+    cat(x$alpha,"\n")
+  } else if(x$calculation == "contourmap"){
+    cat("Level: u = ")
+    cat(x$u,"\n")
+    cat("Type of contour map: ")
+    cat(x$type,"\n")
+    if(x$F.computed) {
+      cat("Contour map function computed\n")
+      cat("Limit for excursion function computation: F.limit = ")
+      cat(x$F.limit,"\n")
+    } else {
+      cat("Contour map function not computed\n")
+    }
+    cat("Quality measures computed : ")
+    if(is.null(x$measures)){
+      cat("none\n")
+    } else {
+      for(i in 1:length(x$measures)){
+        cat(names(x$measures)[i], " = ", x$measures[[i]],"\n")
+      }
+    }
+  }
+}
+
+
+print.excurobj <- function(x,...) {
+  print.summary.excurobj(summary(x))
 }

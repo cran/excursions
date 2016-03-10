@@ -28,20 +28,50 @@ simconf.mixture <- function(alpha,
                             mix.samp = TRUE)
 {
 
-  if(missing(mu))
+  if(missing(mu) || !is.list(mu)) {
     stop('Must provide list with mean values')
-
-  if(missing(Q))
+  } else {
+    K <- length(mu)
+    n <- length(mu[[1]])
+    for(i in seq_len(K)){
+      mu[[k]] <- private.as.vector(mu[[k]])
+    }
+  }
+  if(missing(Q) || !is.list(Q)) {
     stop('Must provide list with precision matrices')
+  } else {
+    if(length(Q) != K){
+      stop('Input lists are of different length')
+    }
+    for(i in seq_len(K)){
+      Q[[k]] <- private.as.Matrix(Q[[k]])
+    }
+  }
 
-  if(missing(w))
+  if(missing(w)){
     stop('Must provide list with mixture weights')
+  } else {
+    w <- private.as.vector(w)
+  }
+  if(!missing(vars)){
+    compute.vars <- FALSE
+    if(length(w) != K){
+      stop('Input lists are of different length')
+    }
+    for(i in seq_len(K)){
+      vars[[k]] <- private.as.vector(vars[[k]])
+    }
+  } else {
+    compute.vars <- TRUE
+    vars <- list()
+  }
+
+  if(!missing(ind))
+    ind <- private.as.vector(ind)
+
 
   if(missing(alpha))
     stop('Must provide significance level alpha')
-
-  K <- length(mu)
-  n <- length(mu[[1]])
 
 
   if(mix.samp){
@@ -55,11 +85,10 @@ simconf.mixture <- function(alpha,
     {
       Q.chol[[k]] <- chol(Q[[k]])
       mu.m[k,] = mu[[k]]
-      if(missing(vars)){
-        sd.m[k,] = sqrt(excursions.variances(L = Q.chol[[k]]))
-      } else {
-        sd.m[k,] = sqrt(vars[[k]])
+      if(compute.vars){
+        vars[[k]] <- excursions.variances(L = Q.chol[[k]])
       }
+      sd.m[k,] = sqrt(vars[[k]])
     }
 
     limits = c(-1000,1000)
@@ -115,11 +144,10 @@ simconf.mixture <- function(alpha,
     {
       Q.chol[[k]] <- t(as(Cholesky(Q[[k]][reo,reo],perm=FALSE),"Matrix"))
       mu.m[k,] = mu[[k]][reo]
-      if(missing(vars)){
-        sd.m[k,] = sqrt(excursions.variances(L = Q.chol[[k]]))
-      } else {
-        sd.m[k,] = sqrt(vars[[k]][reo])
+      if(compute.vars){
+        vars[[k]] <- excursions.variances(L = Q.chol[[k]])
       }
+      sd.m[k,] = sqrt(vars[[k]][reo])
     }
 
     limits = c(-1000,1000)
@@ -162,10 +190,18 @@ simconf.mixture <- function(alpha,
                                                 w = w,
                                                 br = limits))[ireo]
   }
-  return(list(a = a[ind],
-              b = b[ind],
-              a.marginal = a.marg[ind],
-              b.marginal = b.marg[ind]))
-
+  output <- list(a = a[ind],
+                 b = b[ind],
+                 a.marginal = a.marg[ind],
+                 b.marginal = b.marg[ind],
+                 mean = mu[ind],
+                 vars = vars[ind])
+  output$meta = list(calculation="simconf",
+                     alpha=alpha,
+                     n.iter=n.iter,
+                     ind=ind,
+                     call = match.call())
+  class(output) <- "excurobj"
+  return(output)
 }
 

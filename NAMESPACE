@@ -1,32 +1,44 @@
 import(Matrix)
 import(sp)
-importFrom(spam,spam)
-importFrom(spam,triplet)
-importFrom(spam,as.spam)
-importFrom(spam,as.dgRMatrix.spam)
-importFrom(spam,as.spam.dgCMatrix)
+importFrom("methods", as, is)
+importFrom("stats", optim, optimize, pnorm, qnorm, quantile, rnorm, uniroot)
+importFrom("graphics",lines)
+importFrom("spam", spam, triplet, as.spam, as.dgRMatrix.spam, as.spam.dgCMatrix)
 
-
-# Export only the main functions
 export(excursions)
 export(excursions.inla)
-export(gaussint)
-export(excursions.variances)
+export(excursions.mc)
+
 export(simconf)
 export(simconf.mixture)
 export(simconf.inla)
-export(continuous)
+export(simconf.mc)
+
 export(contourmap)
 export(contourmap.inla)
+export(contourmap.mc)
+
+export(continuous)
+export(gaussint)
+export(excursions.variances)
 export(contourmap.colors)
+export(submesh.mesh)
+export(submesh.grid)
 export(tricontour)
+
 S3method(tricontour,inla.mesh)
 S3method(tricontour,matrix)
 S3method(tricontour,list)
+
 export(tricontourmap)
 S3method(tricontourmap,inla.mesh)
 S3method(tricontourmap,matrix)
 S3method(tricontourmap,list)
+
 export(require.nowarnings)
+
+S3method(print,excurobj)
+S3method(print,summary.excurobj)
+S3method(summary,excurobj)
 
 useDynLib(excursions, .registration=TRUE)

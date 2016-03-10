@@ -39,6 +39,22 @@ gaussint <- function(mu,
   if(missing(b))
     stop('Must specify upper integration limit')
 
+  if(!missing(mu))
+    mu <- private.as.vector(mu)
+
+  if(!missing(ind))
+    ind <- private.as.vector(ind)
+
+  a <- private.as.vector(a)
+  b <- private.as.vector(b)
+
+  if(!missing(Q))
+    Q <- private.as.Matrix(Q)
+
+  if(!missing(Q.chol))
+    Q.chol <- private.as.Matrix(Q.chol)
+
+
   n = length(a)
   if(length(b) != n)
     stop('Vectors with integration limits are of different length.')
@@ -137,8 +153,10 @@ gaussint <- function(mu,
 
   if(is(L,'spam.chol.NgPeyton')){
      L = as(as(spam::as.dgRMatrix.spam(spam::as.spam(L)), "TsparseMatrix"),"dtCMatrix")
-  } else if (!is(L, "dtCMatrix") && !is(L,"dCHMsimpl")) {
-    stop("L needs to be in ccs format for now.")
+  } else if (is(L, "Matrix")) {
+     L <- as(as(L, "CsparseMatrix"), "dtCMatrix")
+  } else {
+    stop("Unsuported matrix type.")
   }
 
   if(!missing(seed) && !is.null(seed)){
