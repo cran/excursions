@@ -1,14 +1,14 @@
 Package: excursions
 Type: Package
 Title: Excursion Sets and Contour Credibility Regions for Random Fields
-Version: 2.1.1
-Date: 2016-03-10
+Version: 2.2.1
+Date: 2016-07-06
 Author: David Bolin <davidbolin@gmail.com> and Finn Lindgren <finn.lindgren@gmail.com>
 Maintainer: David Bolin <davidbolin@gmail.com>
-Description: Functions that compute probabilistic excursion sets, contour credibility regions, contour avoiding regions, and simultaneous confidence bands for latent gaussian random processes and fields. The package also contains functions that calculate these quantities for models estimated with the INLA package.
-Depends: Matrix, sp, spam
-Imports: methods, stats, graphics
+Description: Functions that compute probabilistic excursion sets, contour credibility regions, contour avoiding regions, and simultaneous confidence bands for latent Gaussian random processes and fields. The package also contains functions that calculate these quantities for models estimated with the INLA package.
+Depends: Matrix, sp
 Suggests: INLA, testthat, rgeos
+Imports: graphics, methods, stats
 Additional_repositories: https://www.math.ntnu.no/inla/R/stable
 License: GPL (>= 3)
 Copyright: The R package and code, and the main programs, were written
@@ -20,6 +20,6 @@ Copyright: The R package and code, and the main programs, were written
         library by Pierre L'Ecuyer.  For details see the COPYRIGHTS
         file.
 NeedsCompilation: yes
-Packaged: 2016-03-10 19:24:56 UTC; davidbolin
+Packaged: 2016-07-06 14:22:57 UTC; davidbolin
 Repository: CRAN
-Date/Publication: 2016-03-10 23:38:01
+Date/Publication: 2016-07-06 17:35:06
