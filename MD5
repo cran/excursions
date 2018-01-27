@@ -1,4 +1,4 @@
-6d6e54e2c42e013c1296fecc7a83421f *DESCRIPTION
+8de49b9474485cb713ba3619a3f417ca *DESCRIPTION
 7b5d778f10a9e65fc5c81285db56378f *NAMESPACE
 0a7166a50177bfd0826ef0b8595a5d15 *R/contourmap.R
 0b32b8bf6d9315525224a20276c672b7 *R/contourmap.inla.R
@@ -6,12 +6,12 @@
 c3902ac5548cf4511880ea432651a667 *R/excursions.R
 b3561e46d3a0f33cbeb9844cb948a655 *R/excursions.inla.R
 bc3779aff3f862354d3e124de29be016 *R/gaussint.R
-d6541634d2ce10a66e374079b09e83cc *R/geometry.R
+fcde9e3410087b49a99576bb4e2420a9 *R/geometry.R
 fd9bb13b575256e6a0d849ad934831e5 *R/inlautils.R
 5811416e914c37b613209d894859176c *R/interface.mc.R
 42c0260c611dc74f0174714f29f6205a *R/simconf.R
 dba5164958a7c5f6bffcba01d88d5c62 *R/simconf.inla.R
-e5ec6a3f3a02c3b2ee04efe788606923 *R/simconf.mixture.R
+66db21ac7aa4fc7625755f3977019891 *R/simconf.mixture.R
 b449d4d3c95ff7ec849523a8c675ea71 *R/utils.R
 016c492b62dd9f010a9aa1e182993af6 *inst/CITATION
 9ba36e06d9fdb0d3ec9e03a1c93ed31e *inst/COPYRIGHTS
@@ -42,7 +42,7 @@ a67d85c7c9d897ffc7ffbce371f960ae *src/CAMD/Include/camd.h
 bd3311990b38188ba818da04b35eae62 *src/CAMD/Include/camd_internal.h
 8aec48ffe7b62d44376f6f161f90104b *src/CAMD/Makefile
 ef62d2e0b431fc69e8cdfa7494bf79a1 *src/CAMD/README.txt
-5b44e5d2ca7125057034addfc73d3ed0 *src/CAMD/Source/Makefile
+c534e7cd0eb8552501f06e9b2fccd17b *src/CAMD/Source/Makefile
 8da0edddecbf569cdd3d980e944b2b20 *src/CAMD/Source/camd_1.c
 59f01928012e76e8142299438f430aaf *src/CAMD/Source/camd_2.c
 34e2842a619992e351ec23cc1dca516b *src/CAMD/Source/camd_aat.c
@@ -56,13 +56,14 @@ a36512a98ca13cf7e80840fc903b7695 *src/CAMD/Source/camd_info.c
 f4c8a55abfeec00fca1535adba716f5a *src/CAMD/Source/camd_preprocess.c
 e0654ea46fed28b3ffad547e42060310 *src/CAMD/Source/camd_valid.c
 fabd69f6bfb0ee64e7269bc39a785934 *src/CAMD/Source/make_o.mk
-74bd2cf2e54a89f2addebfaf6b8f0078 *src/Makevars
+4c444ecec09cdc680c6e75c8ced7aa27 *src/Makevars
 03879a1db3082baf6ea30ae122f6b7ef *src/RngStream.c
 0a6c741f540ebe35ce8ef5e36946640c *src/RngStream.h
-be53ccaf10c125001a942786d402c46e *src/SuiteSparse_config/Makefile
+2dffea7f3f7c07053e4fc2dea7dd1f1c *src/SuiteSparse_config/Makefile
 c5e2cbbc99bb9c5fb3e9b9729f36116f *src/SuiteSparse_config/SuiteSparse_config.c
 07ada98837bde04fda62ccf91632758a *src/SuiteSparse_config/SuiteSparse_config.h
 d41d8cd98f00b204e9800998ecf8427e *src/SuiteSparse_config/SuiteSparse_config.mk
+37d89540c8ccd1b7d9bc3fe5f1fbdc50 *src/excursions_init.c
 32c7ac26ef53b653b5ae9d73d3f7f98b *src/gsl_fix.c
 daf1515789a43612fde3979ab7cb395c *src/gsl_fix.h
 7c0103cda882ce60988a045e74c09b87 *src/integration.cpp
