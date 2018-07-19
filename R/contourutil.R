@@ -65,8 +65,12 @@ contourfunction.mc <- function(lp,mu,X,ind, alpha, verbose=FALSE)
 ## Calculate the contour map function
 contourfunction <- function(lp,mu,Q,vars,ind, alpha, n.iter=10000,
                             F.limit, Q.chol,max.threads=0,
-                            seed=seed,verbose=FALSE)
+                            seed=seed,verbose=FALSE,
+                            rho,qc=FALSE)
 {
+  if(qc && missing(rho)){
+    stop('Must supply rho if QC method is used.')
+  }
 	if (!missing(Q.chol) && !is.null(Q.chol)) {
       Q = Q.chol
       is.chol = TRUE
@@ -115,12 +119,19 @@ contourfunction <- function(lp,mu,Q,vars,ind, alpha, n.iter=10000,
     }
   }
   if(verbose) cat("calculate marginals\n")
-  rho <- contourmap.marginals(mu=mu,vars=vars,lim=lim,ind=indices)
+  if(missing(rho) || is.null(rho)){
+    rho <- contourmap.marginals(mu=mu,vars=vars,lim=lim,ind=indices)
+    lim$a <- lim$a - mu
+    lim$b <- lim$b - mu
+  }
+  if(qc){
+    lim$a[indices] <- sqrt(vars[indices])*qnorm(pmin(pmax(rho[indices,1],0),1))
+    lim$b[indices] <- sqrt(vars[indices])*qnorm(pmin(pmax(rho[indices,2],0),1))
+    rho <- rho[,2] - rho[,1]
+  }
 
-  lim$a <- lim$a - mu
-	lim$b <- lim$b - mu
 
-    if(verbose) cat("calculate permutation\n")
+  if(verbose) cat("calculate permutation\n")
   use.camd = !missing(ind) || alpha < 1
   reo <- excursions.permutation(rho = rho, ind = indices,
                                 use.camd = use.camd,alpha = F.limit,Q = Q)
@@ -227,6 +238,9 @@ excursions.levelplot <- function(mu,n.levels,ind,levels,
 	         levels,
 	         2*levels[n.levels]-levels[n.levels-1])
   }
+	if(min(x.mean[ind])<l1[1])
+  	l1[1] <- min(min(x.mean[x.mean>-Inf]),l1[1])
+
 	for(i in 1:(n.levels+1)) u.e[i] = (l1[i]+l1[i+1])/2
 
 	for(i in 1:(n.levels)){
@@ -370,7 +384,7 @@ Pmeasure.bound <- function(lp, mu, vars, type, ind=NULL)
 }
 
 ## Function that calculates the P measure for a given contour map.
-Pmeasure <- function(lp,mu,Q,Q.chol, ind=NULL,type,vars=vars)
+Pmeasure <- function(lp,mu,Q,Q.chol, ind=NULL,type,vars=vars,seed=NULL,n.iter=NULL)
 {
   if(type==0){
     res <- contourfunction(lp=lp,mu=mu,Q=Q,vars=vars,ind=ind)
@@ -381,10 +395,11 @@ Pmeasure <- function(lp,mu,Q,Q.chol, ind=NULL,type,vars=vars)
     }
     limits = excursions.limits(lp=lp,mu=mu,measure=type)
 	  res = gaussint(mu = mu, Q=Q, Q.chol = Q.chol, a=limits$a,
-	                b=limits$b,ind=ind,use.reordering="limits")
+	                b=limits$b,ind=ind,use.reordering="limits",
+	                n.iter=n.iter,seed=seed)
 	  p = res$P[1]
   }
-	return(p)
+	return(list(P = res$P[1],E=res$E[1]))
 }
 
 ## Function that calculates the P measure for a given contour map.
@@ -413,7 +428,7 @@ excursions.limits <- function(lp,mu,measure)
 	a = rep(-Inf,n)
 	b = rep(Inf,n)
 
-	if(measure==2){
+	if(measure==2 || measure == "P2" || measure == "P2-bound"){
 		b[lp$E[[1]]] = lp$u.e[2]
 		a[lp$E[[n.l+1]]] = lp$u.e[n.l]
 
@@ -423,7 +438,7 @@ excursions.limits <- function(lp,mu,measure)
 				b[lp$E[[i]]] = lp$u.e[i+1]
 			}
 		}
-	} else if(measure ==1){
+	} else if(measure ==1 || measure == "P1" || measure == "P1-bound"){
 		if(n.l>1){
 			b[lp$E[[1]]] = lp$u[2]
 			a[lp$E[[n.l+1]]] = lp$u[n.l-1]
@@ -438,7 +453,7 @@ excursions.limits <- function(lp,mu,measure)
 				b[lp$E[[i]]] = lp$u[i+1]
 			}
 		}
-	} else if(measure==0){
+	} else if(measure==0 || measure=="P0" || measure == "P0-bound"){
 
 		b[lp$E[[1]]] = lp$u[1]
 		a[lp$E[[n.l+1]]] = lp$u[n.l]
@@ -454,6 +469,28 @@ excursions.limits <- function(lp,mu,measure)
 	}
 	return(list(a=a,b=b))
 }
+
+#' Define a color map for displaying contour maps.
+#'
+#' \code{contourmap.colors} calculates suitable colours for displaying contour maps.
+#'
+#' @param lp A contourmap calculated by \code{contourmap}, \code{contourmap.inla}, or \code{contourmap.mc}
+#' @param zlim The range that should be used (optional). The default is the range of the mean value function used when creating the contourmap.
+#' @param col The colormap that the colours should be taken from.
+#' @param credible.col The color that should be used for displaying the credible regions for the contour curves (optional).
+#'
+#' @return A color map.
+#' @author David Bolin \email{davidbolin@@gmail.com}
+#' @export
+#'
+#' @examples
+#' n = 10
+#' Q = Matrix(toeplitz(c(1, -0.5, rep(0, n-2))))
+#' map <- contourmap(mu = seq(-5, 5, length=n),Q,n.levels = 2,
+#'                   compute=list(F=FALSE),max.threads=1)
+#' cols = contourmap.colors(map, col=heat.colors(100, 1),
+#'                          credible.col = grey(0.5, 1))
+
 
 contourmap.colors <- function(lp,zlim,col,credible.col)
 {

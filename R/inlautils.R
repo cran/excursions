@@ -65,9 +65,11 @@ private.link.function <- function(x, link, inv=FALSE)
 private.get.config <- function(result,i)
 {
   mu=result$misc$configs$config[[i]]$mean
-	Q=forceSymmetric(result$misc$configs$config[[i]]$Q)
-	vars = diag(result$misc$configs$config[[i]]$Qinv)
-	lp = result$misc$configs$config[[i]]$log.posterior
+  Q=forceSymmetric(result$misc$configs$config[[i]]$Q)
+  vars = diag(result$misc$configs$config[[i]]$Qinv)
+  m <- max(unlist(lapply(result$misc$configs$config,
+                         function(x) x$log.posterior)))
+  lp = result$misc$configs$config[[i]]$log.posterior -m
   return(list(mu=mu,Q=Q,vars=vars,lp=lp))
 }
 
@@ -77,18 +79,8 @@ private.get.config <- function(result,i)
 ## in the random effect vector otherwise.
 inla.get.marginal <- function(i, u,result,effect.name=NULL, u.link, type)
 {
-  link = result$misc$linkfunctions$names[result$misc$linkfunctions$link][i]
-
   if(is.null(effect.name) && u.link == TRUE){
-    #calculate marginals using fitted values
-    #if(link=="identity" || is.na(link)){
       marg.p = result$marginals.fitted.values[[i]]
-    #} else {
-
-      #marg.p = INLA::inla.tmarginal(function(x)
-      #                        private.link.function(x,link,inv=TRUE),
-      #                            result$marginals.fitted.values[[i]])
-    #}
   } else if (is.null(effect.name)){
       # Calculate marginals using linear predictor
       marg.p = result$marginals.linear.predictor[[i]]
@@ -97,9 +89,24 @@ inla.get.marginal <- function(i, u,result,effect.name=NULL, u.link, type)
       marg.p = result$marginals.random[[effect.name]][[i]]
   }
 
-	  if(type=='<'){
-		  return(INLA::inla.pmarginal(u,marg.p))
-	  } else {
-		  return(1-INLA::inla.pmarginal(u,marg.p))
-	  }
+  if(type=='<'){
+	  return(INLA::inla.pmarginal(u,marg.p))
+  } else {
+	  return(1-INLA::inla.pmarginal(u,marg.p))
   }
+}
+
+## Calculate the marginal probability for a<X_i<b.
+## The function returns c(P(X<a),P(X<b))
+inla.get.marginal.int <- function(i, a,b,result,effect.name=NULL)
+{
+  if (is.null(effect.name)){
+    # Calculate marginals using linear predictor
+    marg.p = result$marginals.linear.predictor[[i]]
+  } else {
+    # Calculate marginals using a random effect
+    marg.p = result$marginals.random[[effect.name]][[i]]
+  }
+  return(c(INLA::inla.pmarginal(a,marg.p),INLA::inla.pmarginal(b,marg.p)))
+
+}

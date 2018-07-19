@@ -22,30 +22,52 @@
 private.Cholesky <- function(A, ...) {
   L <- expand(Matrix::Cholesky(private.as.dgCMatrix(A), ...))
   n <- nrow(A)
-  reo <- integer(n)
-  reo[L$P@perm] <- seq_len(n)
-  ireo = integer(n)
-  ireo[reo] = seq_len(n)
+  ireo <- integer(n)
+  ireo[L$P@perm] <- seq_len(n)
+  reo = integer(n)
+  reo[ireo] = seq_len(n)
   list(R=private.as.dtCMatrixU(L$L), reo=reo, ireo=ireo)
 }
 
 
 
+#' Calculate variances from a sparse precision matrix
+#'
+#' \code{excursions.variances} calculates the diagonal of the inverse of a sparse
+#' symmetric positive definite matrix \code{Q}. 
+#'
+#' @param L Cholesky factor of precision matrix.
+#' @param Q Precision matrix.
+#' @param max.threads Decides the number of threads the program can use. Set to 0 for using
+#' the maximum number of threads allowed by the system (default).
+#'
+#' @return A vector with the variances.
+#' @export
+#' @details The method for calculating the
+#' diagonal requires the Cholesky factor, \code{L}, of \code{Q}, which should be supplied if
+#' available. If \code{Q} is provided, the cholesky factor is
+#' calculated and the variances are then returned in the same ordering as \code{Q}.
+#' If \code{L} is provided, the variances are returned in the same ordering as \code{L},
+#' even if \code{L@invpivot} exists.
+#' @author David Bolin \email{davidbolin@@gmail.com}
+#'
+#' @examples
+#' ## Create a tridiagonal precision matrix
+#' n = 21
+#' Q = Matrix(toeplitz(c(1, -0.1, rep(0, n-2))))
+#' v2 = excursions.variances(Q=Q,max.threads=2)
+#' ## var2 should be the same as:
+#' v1 = diag(solve(Q))
 
-## calculates variances given either a cholesky factor L in Matrix format,
-## or given a precision matrix Q. If Q is provided, the cholesky factor
-## is calculated and the variances are then returned in the same ordering as Q
-## If L is provided, the variances are returned in the same ordering as L, even
-## if L@invpivot exists.
 excursions.variances<-function(L,Q, max.threads=0)
 {
   if(!missing(L) && !is.null(L)){
-    ireo = FALSE
+    reordered = FALSE
     L <- private.as.dtCMatrixU(L)
   } else {
+    reordered = TRUE
     L <- private.Cholesky(Q, LDL=FALSE)
-    ireo = TRUE
-    reo <- L$reo
+    ireo = L$ireo
     L <- L$R
   }
 
@@ -56,8 +78,8 @@ excursions.variances<-function(L,Q, max.threads=0)
                   n = as.integer(dim(L)[1]),
                   n_threads = as.integer(max.threads))
 
-  if(ireo){
-    out$variances[reo]
+  if(reordered){
+    out$variances[ireo]
   } else {
     out$variances
   }
@@ -453,8 +475,32 @@ excursions.rand <- function(n,seed,n.threads=1)
 
 
 
-## Turn off all warnings for require(), to allow clean completion of
-## examples that require unavailable Suggested packages.
+#' Warnings free loading of add-on packages
+#'
+#' Turn off all warnings for require(), to allow clean completion of examples
+#' that require unavailable Suggested packages.
+#'
+#' @param package The name of a package, given as a character string.
+#' @param lib.loc a character vector describing the location of R library trees
+#' to search through, or \code{NULL}.  The default value of \code{NULL}
+#' corresponds to all libraries currently known to \code{.libPaths()}.
+#' Non-existent library trees are silently ignored.
+#' @param character.only a logical indicating whether \code{package} can be
+#' assumed to be a character string.
+#'
+#' @return \code{require.nowarnings} returns (invisibly) a logical indicating whether the
+#' required package is available.
+#' @export
+#' @details \code{require.nowarnings(package)} acts the same as
+#' \code{require(package, quietly = TRUE)}, except that all warnings are turned off.
+#' In particular, no warning is given if the package is unavailable.
+#' @seealso \code{\link{require}}
+#' @examples
+#' ## This should produce no output:
+#' if (require.nowarnings(nonexistent)) {
+#' message("Package loaded successfully")
+#' }
+
 require.nowarnings <- function(package, lib.loc = NULL, character.only = FALSE)
 {
   if (!character.only)
@@ -520,6 +566,15 @@ mcint <- function(X,
 }
 
 
+#' Summarise excurobj objects
+#' 
+#' Summary method for class "excurobj"
+#' 
+#' @param object an object of class "excurobj", usually, a result of a call
+#'   to \code{\link{excursions}}.
+#' @param ... further arguments passed to or from other methods.
+#' @export
+#' @method summary excurobj
 summary.excurobj <- function(object,...)
 {
   out <- list()
@@ -559,11 +614,21 @@ summary.excurobj <- function(object,...)
         if(!is.null(object$P0))
           out$measures$P0 = object$P0
 
-        if(!is.null(object$P1))
-          out$measures$P1 = object$P1
+        if(!is.null(object$P1)){
+          if(!is.null(object$P1.error)){
+            out$measures$P1 = sprintf("%.4g (error %.5g)",object$P1,object$P1.error)
+          } else {
+            out$measures$P1 = object$P1
+          }
+        }
 
-       if(!is.null(object$P2))
-          out$measures$P2 = object$P2
+       if(!is.null(object$P2)){
+         if(!is.null(object$P2.error)){
+           out$measures$P2 = sprintf("%.4g (error %.5g)",object$P2,object$P2.error)
+         } else {
+           out$measures$P2 = object$P2
+         }
+       }
 
         if(!is.null(object$P0.bound))
           out$measures$P0.bound = object$P0.bound
@@ -579,6 +644,11 @@ summary.excurobj <- function(object,...)
 }
 
 
+#' @param x an object of class "summary.excurobj", usually, a result of a call
+#'   to \code{\link{summary.excurobj}}.
+#' @export
+#' @method print summary.excurobj
+#' @rdname summary.excurobj
 print.summary.excurobj <- function(x,...)
 {
 
@@ -622,7 +692,9 @@ print.summary.excurobj <- function(x,...)
   }
 }
 
-
+#' @export
+#' @method print excurobj
+#' @rdname summary.excurobj
 print.excurobj <- function(x,...) {
-  print.summary.excurobj(summary(x))
+  print(summary(x))
 }
