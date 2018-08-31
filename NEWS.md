@@ -1,3 +1,18 @@
+# excursions 2.4.4
+
+* Set fixed buffer size for RngStream.c stream name
+* Update Makevars to avoid OpenMP warning
+
+# excursions 2.4.3
+
+* Improved INLA backwards compatibility
+
+# excursions 2.4.2
+
+* Add support for general manifolds in continuous interpretation methods
+* Bug fixes to continuous interpretation methods
+* Update CITATION information with new JSS manuscript
+
 # excursions 2.4.1
 
 * Minor fixed to C code to avoid warnings.
