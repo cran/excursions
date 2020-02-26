@@ -1,8 +1,8 @@
 Package: excursions
 Type: Package
 Title: Excursion Sets and Contour Credibility Regions for Random Fields
-Version: 2.4.4
-Date: 2018-08-31
+Version: 2.4.5
+Date: 2020-02-24
 Authors@R: c(
     person("David", "Bolin", email = "davidbolin@gmail.com", role = c("cre", "aut")),
     person("Finn", "Lindgren", email = "finn.lindgren@gmail.com", role = "aut"))
@@ -21,10 +21,10 @@ Copyright: The R package and code, and the main programs, were written
         library by Pierre L'Ecuyer.  For details see the COPYRIGHTS
         file.
 NeedsCompilation: yes
-RoxygenNote: 6.0.1
-Packaged: 2018-08-31 10:14:04 UTC; davidbolin
+RoxygenNote: 7.0.2
+Packaged: 2020-02-24 07:12:10 UTC; bolinjd
 Author: David Bolin [cre, aut],
   Finn Lindgren [aut]
 Maintainer: David Bolin <davidbolin@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-08-31 11:30:07 UTC
+Date/Publication: 2020-02-26 13:10:06 UTC
