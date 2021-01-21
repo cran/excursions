@@ -109,12 +109,12 @@ this is that the more accurate methods also have higher computational costs.
 }
 \note{
 This function requires the \code{INLA} package, which is not a CRAN
-package.  See \url{http://www.r-inla.org/download} for easy installation instructions.
+package.  See \url{https://www.r-inla.org/download-install} for easy installation instructions.
 }
 \examples{
 ## In this example, we calculate the excursion function
 ## for a partially observed AR process.
-\donttest{
+\dontrun{
 if (require.nowarnings("INLA")) {
 ## Sample the process:
 rho = 0.9

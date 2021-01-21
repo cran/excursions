@@ -500,7 +500,7 @@ outline.on.mesh <- function(z, mesh, complement=FALSE)
 #' @return An \code{inla.mesh} object.
 #' @export
 #' @note This function requires the \code{INLA} package, which is not a CRAN
-#' package.  See \url{http://www.r-inla.org/download} for easy installation instructions.
+#' package.  See \url{https://www.r-inla.org/download-install} for easy installation instructions.
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' @examples
 #' \dontrun{
@@ -543,7 +543,7 @@ submesh.grid <- function(z, grid=NULL)
 #' @return An \code{inla.mesh} object.
 #' @export
 #' @note This function requires the \code{INLA} package, which is not a CRAN package.
-#' See \url{http://www.r-inla.org/download} for easy installation instructions.
+#' See \url{https://www.r-inla.org/download-install} for easy installation instructions.
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' @examples
 #' \dontrun{
@@ -725,7 +725,7 @@ as.Lines.raw <- function(cl, ID=" ") {
 #' @author Finn Lindgren \email{finn.lindgren@@gmail.com}
 #' 
 #' @examples
-#' \donttest{
+#' \dontrun{
 #'   if (require.nowarnings("INLA")) {
 #'     ## Generate mesh and SPDE model
 #'     n.lattice <- 20 #increase for more interesting, but slower, examples
@@ -1761,7 +1761,7 @@ calc.continuous.P0 <- function(F, G, F.geometry, method) {
 #' Bolin, D. and Lindgren, F. (2018), \emph{Calculating Probabilistic Excursion Sets and Related Quantities Using excursions}, Journal of Statistical Software, vol 86, no 1, pp 1-20.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' if (require.nowarnings("INLA")) {
 #' #Generate mesh and SPDE model
 #' n.lattice = 10 #Increase for more interesting, but slower, examples
