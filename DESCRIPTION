@@ -1,7 +1,7 @@
 Package: excursions
 Type: Package
 Title: Excursion Sets and Contour Credibility Regions for Random Fields
-Version: 2.5.3
+Version: 2.5.4
 Authors@R: c(
     person("David", "Bolin", email = "davidbolin@gmail.com", role = c("cre", "aut")),
     person("Finn", "Lindgren", email = "finn.lindgren@gmail.com", role = "aut"))
@@ -9,6 +9,7 @@ Description: Functions that compute probabilistic excursion sets, contour credib
 Depends: R (>= 3.5), Matrix, sp
 Suggests: INLA (>= 21.08.31), testthat (>= 3.0.0), rgeos, rgdal
 Imports: graphics, methods, stats, withr
+SystemRequirements: Gnu Scientific Library version >= 2.1
 Additional_repositories: https://inla.r-inla-download.org/R/testing
 BugReports: https://github.com/davidbolin/excursions/issues
 License: GPL (>= 3)
@@ -17,17 +18,17 @@ Copyright: The R package and code, and the main programs, were written
         by and are Copyright by David Bolin and Finn Lindgren, and are
         redistributable under the GNU Public License, version 3 or
         later.  The package also includes code from the libraries CAMD
-        from the SuiteSparse collection of Tim Davis, as well as
-        functions from the GNU Scientific library and the RngStreams
-        library by Pierre L'Ecuyer.  For details see the COPYRIGHTS
-        file.
+        from the SuiteSparse collection of Tim Davis, and the
+        RngStreams library by Pierre L'Ecuyer.  For details see the
+        COPYRIGHTS file.
 NeedsCompilation: yes
 RoxygenNote: 7.2.1
 Encoding: UTF-8
+Config/testthat/parallel: true
 Config/testthat/edition: 3
-Packaged: 2022-08-24 09:58:18 UTC; bolinjd
+Packaged: 2022-10-13 13:19:38 UTC; bolinjd
 Author: David Bolin [cre, aut],
   Finn Lindgren [aut]
 Maintainer: David Bolin <davidbolin@gmail.com>
 Repository: CRAN
-Date/Publication: 2022-08-25 08:22:43 UTC
+Date/Publication: 2022-10-14 12:12:33 UTC
