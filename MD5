@@ -1,6 +1,6 @@
-19e3d6d3e4766a8976ad884ffb0e47d9 *DESCRIPTION
+d90ccd430b9290a8a6d02d1621656182 *DESCRIPTION
 2adf7aa69e261b6d546bc89a71bf8183 *NAMESPACE
-f53166421d0261e5a606aa5e6ebaabf3 *NEWS.md
+94777b8c8c096984ba745dc5329cae3d *NEWS.md
 ace18e0c4eef978145a6e1080da0b61e *R/contourmap.R
 04328f6d75457ed7d7823c05779e351b *R/contourmap.inla.R
 968447b15f65290f1d1891ba00609ec0 *R/contourutil.R
@@ -66,7 +66,7 @@ e0654ea46fed28b3ffad547e42060310 *src/CAMD/Source/camd_valid.c
 fabd69f6bfb0ee64e7269bc39a785934 *src/CAMD/Source/make_o.mk
 dba4f037d6b1bc855bfdc03207424a9e *src/Makevars.in
 6ec348febc2cade9038b3ffec187ca37 *src/Makevars.win
-678e18bfe6c9c847186cb452317dc8f6 *src/RngStream.c
+4a47e41bd8e899831a148b112f6ec295 *src/RngStream.c
 0a6c741f540ebe35ce8ef5e36946640c *src/RngStream.h
 2dffea7f3f7c07053e4fc2dea7dd1f1c *src/SuiteSparse_config/Makefile
 c5e2cbbc99bb9c5fb3e9b9729f36116f *src/SuiteSparse_config/SuiteSparse_config.c
@@ -74,9 +74,9 @@ c5e2cbbc99bb9c5fb3e9b9729f36116f *src/SuiteSparse_config/SuiteSparse_config.c
 d41d8cd98f00b204e9800998ecf8427e *src/SuiteSparse_config/SuiteSparse_config.mk
 37d89540c8ccd1b7d9bc3fe5f1fbdc50 *src/excursions_init.c
 e278ef99d110073d5faef61c9d3e446d *src/gsl_fix.h
-12ebd1819d7ef0bca859b1fbddae1ee2 *src/integration.cpp
+e3c45328cfcf5d77cb117741e7c69ad1 *src/integration.cpp
 9881c3ff62dcb0a5d5d3143566100613 *src/integration.h
-371cb7b0fc393af3e20115adab79ee3d *src/qinv.cpp
+4d9c5e4bc578528744cd9a995575fcc0 *src/qinv.cpp
 ac56a49d7e7545d21c185e06dcf53bbb *src/reordering.cpp
 18c3b181227bfc33ea8807da39d175f3 *tests/testthat.R
 bfcc83c677eff8aa866a5867c854fe9f *tests/testthat/_snaps/contourmap_inla.md

@@ -1,7 +1,7 @@
 Package: excursions
 Type: Package
 Title: Excursion Sets and Contour Credibility Regions for Random Fields
-Version: 2.5.7
+Version: 2.5.8
 Authors@R: c(
     person("David", "Bolin", email = "davidbolin@gmail.com", role = c("cre", "aut"),
             comment = c(ORCID = "0000-0003-2361-5465")),
@@ -29,10 +29,10 @@ RoxygenNote: 7.2.3
 Encoding: UTF-8
 Config/testthat/parallel: true
 Config/testthat/edition: 3
-Packaged: 2023-10-23 11:40:32 UTC; bolinjd
+Packaged: 2023-11-29 18:06:47 UTC; bolinjd
 Author: David Bolin [cre, aut] (<https://orcid.org/0000-0003-2361-5465>),
   Finn Lindgren [aut] (<https://orcid.org/0000-0002-5833-2011>),
   Suen Man Ho [ctb]
 Maintainer: David Bolin <davidbolin@gmail.com>
 Repository: CRAN
-Date/Publication: 2023-10-23 13:00:02 UTC
+Date/Publication: 2023-11-30 08:10:02 UTC
