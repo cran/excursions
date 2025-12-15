@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="David Bolin and Finn Lindgren" />
+
+
+<title>Definitions and computational methodology</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+margin-bottom: 0em;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Definitions and computational
+methodology</h1>
+<h4 class="author">David Bolin and Finn Lindgren</h4>
+
+
+
+<p>Hierarchical models are of great importance in many areas of
+statistics. In the simplest form, a hierarchical model has a likelihood
+distribution <span class="math inline">\(\pi({\boldsymbol{\mathrm{Y}}}|{\boldsymbol{\mathrm{X}}},
+{\boldsymbol{\mathrm{\theta}}})\)</span> for observed data <span class="math inline">\({\boldsymbol{\mathrm{Y}}}\)</span>, which is
+specified conditionally on a latent process of interest, <span class="math inline">\({\boldsymbol{\mathrm{X}}}\)</span>, which has a
+distribution <span class="math inline">\(\pi({\boldsymbol{\mathrm{X}}}|{\boldsymbol{\mathrm{\theta}}})\)</span>.
+For Bayesian hierarchical models, one also specifies prior distributions
+for the model parameters <span class="math inline">\({\boldsymbol{\mathrm{\theta}}}\)</span>. The most
+important special case of these models are the LGMs, which are obtained
+by assuming that <span class="math inline">\({\boldsymbol{\mathrm{X}}}|{\boldsymbol{\mathrm{\theta}}}\)</span>
+has a Gaussian distribution <span class="citation">(Rue, Martino, and
+Chopin 2009)</span>. Numerous applications can be studied using models
+of this form, and these are therefore the main focus of the methods in
+<code>excursions</code>.</p>
+<p>A statistical analysis using an LGM often concludes with reporting
+the posterior mean <span class="math inline">\(E({\boldsymbol{\mathrm{X}}}|{\boldsymbol{\mathrm{Y}}})\)</span>
+as a point estimate of the latent field, possibly together with
+posterior variances as a measure of uncertainty. In many applications,
+however, reporting posterior means and variances are not enough. As
+stated in the introduction, one may be interested in computing regions
+where the latent field exceeds some given threshold, contour curves with
+their associated uncertainty, or simultaneous confidence bands. In some
+applications, only a contour map of the posterior mean is reported,
+where the number of levels in the contour map should represent the
+uncertainty in the estimate. These are quantities that can be computed
+with <code>excursions</code> and we now define these in more detail
+before outlining how they can be computed. For details we refer to <span class="citation">(Bolin and Lindgren 2015)</span> and <span class="citation">(Bolin and Lindgren 2017)</span>.</p>
+<div id="definitions" class="section level2">
+<h2>Definitions</h2>
+<p>The main quantities that can be computed using
+<code>excursions</code> are (1) excursion sets, (2) contour credible
+regions and level avoiding sets, (3) excursion functions, (4) contour
+maps and their quality measures, (5) simultaneous confidence bands. This
+section defines these in more detail.</p>
+<p>Throughout the section, <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span> will denote
+a stochastic process defined on some domain of interest, <span class="math inline">\(\Omega\)</span>, which we assume is open with a
+well-defined area <span class="math inline">\(|\Omega|&lt;\infty\)</span>. Since it is not
+necessary for the definitions, we will not explicitly state the
+dependency on the data, but simply allow <span class="math inline">\(X\)</span> to have some possible non-stationary
+distribution. In practice, however, the distribution of <span class="math inline">\(X\)</span> will typically be a posterior
+distribution conditionally on data, <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})|{\boldsymbol{\mathrm{Y}}}\)</span>.
+For frequentist models, the distribution of <span class="math inline">\(X\)</span> could also be conditionally on for
+example a maximum likelihood estimate of the parameters, <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})|{\boldsymbol{\mathrm{Y}}},\widehat{{\boldsymbol{\mathrm{\theta}}}}\)</span>.</p>
+<div id="excursion-sets" class="section level3">
+<h3>Excursion sets</h3>
+<p>An excursion set is a set where the process <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span> exceeds or
+goes below some given level of interest, <span class="math inline">\(u\)</span>. A where <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})&gt;u\)</span> is
+referred to as a positive excursion set, whereas a set where <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})&lt;u\)</span> is
+referred to as a negative excursion set. If <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})=f({\boldsymbol{\mathrm{s}}})\)</span>
+is a known function, these sets can be computed directly as <span class="math inline">\(A_u^+(f) = \{ {\boldsymbol{\mathrm{s}}}\in\Omega;
+f({\boldsymbol{\mathrm{s}}})&gt;u \}\)</span> and <span class="math inline">\(A_u^-(f) = \{ {\boldsymbol{\mathrm{s}}}\in\Omega;
+f({\boldsymbol{\mathrm{s}}})&lt;u \}\)</span> respectively. If <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span> is a latent
+random process, one can only provide a region where it with some (high)
+probability exceeds the level. More specifically, the positive level
+<span class="math inline">\(u\)</span> excursion set with probability
+<span class="math inline">\(\alpha\)</span>, <span class="math inline">\(E_{{u,\alpha}}^{{+}}(X)\)</span>, is defined as
+the largest set so that with probability <span class="math inline">\(1-\alpha\)</span> the level <span class="math inline">\(u\)</span> is exceeded at all locations in the
+set, <span class="math display">\[
+E_{{u,\alpha}}^{{+}} = \mathop{\mathrm{arg\,max}}_{D}\{|D|:P[D\subset
+A_u^+(X)]\geq 1 - \alpha\}.
+\]</span> Similarly, the negative <span class="math inline">\(u\)</span>
+excursion set with probability <span class="math inline">\(\alpha\)</span>, <span class="math inline">\(E_{{u,\alpha}}^{{-}}(X)\)</span>, is defined as
+the largest set so that with probability <span class="math inline">\(1-\alpha\)</span> the process is below the level
+<span class="math inline">\(u\)</span> at all locations in the set. This
+set is obtained by replacing <span class="math inline">\(A_u^+(X)\)</span> with <span class="math inline">\(A_u^-(X)\)</span> in the equation above.</p>
+</div>
+<div id="contour-credible-regions-and-level-avoiding-sets" class="section level3">
+<h3>Contour credible regions and level avoiding sets</h3>
+<p>For a function <span class="math inline">\(f\)</span>, a contour
+curve (or set in general) of a level <span class="math inline">\(u\)</span> is defined as the set of all level
+<span class="math inline">\(u\)</span> crossings. Formally, the level
+curve is defined as <span class="math inline">\(A_u^c(f) =
+\left(A_u^+(f)^o\cup A_u^-(f)^o\right)^c\)</span>, where <span class="math inline">\(B^o\)</span> denotes the interior of the set <span class="math inline">\(B\)</span> and <span class="math inline">\(B^c\)</span> denotes the complement. Note that
+<span class="math inline">\(A_u^c(f)\)</span> not only includes the set
+of locations where <span class="math inline">\(f({\boldsymbol{\mathrm{s}}})=u\)</span>, but also
+all discontinuous level crossings.</p>
+<p>For a latent random process <span class="math inline">\(X\)</span>,
+one can only provide a credible region for the contour curve. A level
+<span class="math inline">\(u\)</span> contour credibility region, <span class="math inline">\(E_{{u,\alpha}}^{{c}}(X)\)</span>, is defined as
+the smallest set such that with probability <span class="math inline">\(1-\alpha\)</span> level <span class="math inline">\(u\)</span> crossings of <span class="math inline">\(X\)</span> are in the set. This set can be seen as
+the complement of the level <span class="math inline">\(u\)</span>
+contour avoiding set <span class="math inline">\(E_{{u,\alpha}}^{{}}(X)\)</span>, which is defined
+as the largest union <span class="math inline">\(M_{u,\alpha}^+ \cup
+M_{u,\alpha}^-\)</span>, where jointly <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})&gt;u\)</span> in
+<span class="math inline">\(M_{u,\alpha}^+\)</span> and <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})&lt;u\)</span> in
+<span class="math inline">\(M_{u,\alpha}^-\)</span>. Formally, <span class="math display">\[\begin{equation*}
+(M_{u,\alpha}^+(X), M_{u,\alpha}^-(X)) =
+\mathop{\mathrm{arg\,max}}_{(D^+,D^-)}\{|D^-\cup D^+| :
+P(D^- \subseteq A_u^-(X),\, D^+ \subseteq A_u^+(X))
+\geq 1-\alpha\},
+\end{equation*}\]</span> where the sets <span class="math inline">\((D^+,D^-)\)</span> are open. The sets <span class="math inline">\(M_{u,\alpha}^+\)</span> and <span class="math inline">\(M_{u,\alpha}^-\)</span> are denoted as the pair of
+level <span class="math inline">\(u\)</span> avoiding sets. The notion
+of level avoiding sets can naturally be extended to multiple levels
+<span class="math inline">\(u_1&lt; u_2 &lt; \cdots &lt; u_k\)</span>,
+which is needed when studying contour maps. In this case, the multilevel
+contour avoiding set is denoted <span class="math inline">\(C_{{\boldsymbol{\mathrm{u}}},\alpha}(X)\)</span>
+(For a formal definition, see <span class="citation">(Bolin and Lindgren
+2017)</span>).</p>
+</div>
+<div id="excursion-functions" class="section level3">
+<h3>Excursion functions</h3>
+<p> introduced excursion functions as a tool for visualizing excursion
+sets simultaneously for all values of <span class="math inline">\(\alpha\)</span>. For a level <span class="math inline">\(u\)</span>, the positive and negative excursion
+functions are defined as <span class="math inline">\(F_u^+({\boldsymbol{\mathrm{s}}}) = 1 -
+\inf\{\alpha ; {\boldsymbol{\mathrm{s}}}\in E_{{u,\alpha}}^{{+}}
+\}\)</span> and <span class="math inline">\(F_u^-({\boldsymbol{\mathrm{s}}}) = 1 -
+\inf\{\alpha ; {\boldsymbol{\mathrm{s}}}\in E_{{u,\alpha}}^{{-}}
+\}\)</span>, respectively. Similarly, the contour avoidance function,
+and the contour function are defined as <span class="math inline">\(F_u({\boldsymbol{\mathrm{s}}}) = 1 -\inf\{\alpha ;
+{\boldsymbol{\mathrm{s}}}\in E_{{u,\alpha}}^{{}} \}\)</span> and <span class="math inline">\(F_u^c({\boldsymbol{\mathrm{s}}}) = \sup\{\alpha;
+{\boldsymbol{\mathrm{s}}}\in E_{{u,\alpha}}^{{c}}\}\)</span>,
+respectively. Finally, for levels <span class="math inline">\(u_1&lt;
+u_2 &lt; \cdots &lt; u_k\)</span>, one can define a contour map function
+as <span class="math inline">\(F({\boldsymbol{\mathrm{s}}}) =
+\sup\{1-\alpha; {\boldsymbol{\mathrm{s}}}\in
+C_{u,\alpha}\}\)</span>.</p>
+<p>These functions take values between zero and one and each set <span class="math inline">\(E_{{u,\alpha}}^{{\bullet}}\)</span> can be
+retrieved as the <span class="math inline">\(1-\alpha\)</span> excursion
+set of the function <span class="math inline">\(F_u^{\bullet}({\boldsymbol{\mathrm{s}}})\)</span>.</p>
+</div>
+<div id="contour-maps-and-their-quality-measures" class="section level3">
+<h3>Contour maps and their quality measures</h3>
+<p>For a function <span class="math inline">\(f({\boldsymbol{\mathrm{s}}})\)</span>, a contour
+map <span class="math inline">\(C_f\)</span> with contour levels <span class="math inline">\(u_1 &lt; u_2 &lt; \ldots &lt; u_K\)</span> is
+defined as the collection of contour curves <span class="math inline">\(A_{u_1}^c(f), \ldots, A_{u_K}^c(f)\)</span> and
+associated level sets <span class="math inline">\(G_k =
+\{{\boldsymbol{\mathrm{s}}} : u_{k}&lt; f({\boldsymbol{\mathrm{s}}})
+&lt; u_{k+1}\}\)</span>, for <span class="math inline">\(0\leq k\leq
+K\)</span>, where one defines <span class="math inline">\(u_0 =
+-\infty\)</span> and <span class="math inline">\(u_{K+1}=\infty\)</span>. In practice, a process
+<span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span> is
+often visualized using a contour map of the posterior mean <span class="math inline">\(E(X({\boldsymbol{\mathrm{s}}})|{\boldsymbol{\mathrm{Y}}})\)</span>.
+The contour maps is visualized either by just drawing the contour curves
+labeled by their values, or by also visualizing each level set in a
+specific color. The color for a set <span class="math inline">\(G_k\)</span> is typically chosen as the color that
+corresponds to the level <span class="math inline">\(u_k^e =
+(u_k+u_{k+1})/2\)</span> in a given color map.</p>
+<p>In order to choose an appropriate number of contours, one must be
+able to quantify the uncertainty of contour maps. The uncertainty can be
+represented using a contour map quality measure <span class="math inline">\(P\)</span>, which is a function that takes values
+in <span class="math inline">\([0, 1]\)</span>. Here, <span class="math inline">\(P\)</span> should be chosen in such a way that
+<span class="math inline">\(P \approx 1\)</span> indicates that the
+contour map, in some sense, is appropriate as a description of the
+distribution of the random field, whereas <span class="math inline">\(P
+\approx 0\)</span> should indicate that the contour map is
+inappropriate.</p>
+<p>An example of a contour map quality measure is the normalized
+integral of the contour map function <span class="math display">\[\begin{equation}
+P_0(X, C_f) =
+\frac1{|\Omega|}\int_{\Omega}F({\boldsymbol{\mathrm{s}}})d{\boldsymbol{\mathrm{s}}}.
+\end{equation}\]</span> The most useful quality measure is denoted <span class="math inline">\(P_2\)</span> and is defined as the simultaneous
+probability for the level crossings of <span class="math inline">\((u_1^e, \ldots , u_K^e)\)</span> all falling
+within their respective level sets <span class="math inline">\((G_1,
+\ldots, G_K)\)</span> .</p>
+<p>An intuitively interpretable approach for choosing the number of
+contours in a contour map is to find the largest K such that <span class="math inline">\(P_2\)</span> is above some threshold. For a joint
+credibility of <span class="math inline">\(90\%\)</span>, say, choose
+the largest number of contours such that <span class="math inline">\(P_2
+\geq 0.9\)</span>. How this can be done using <code>excursions</code> is
+illustrated in Section~<span class="math inline">\(\ref{sec:precip}\)</span>.</p>
+</div>
+<div id="simultaneous-confidence-bands" class="section level3">
+<h3>Simultaneous confidence bands</h3>
+<p>Especially for time series applications, the uncertainty in the
+latent process is often visualized using pointwise confidence bands. A
+pointwise confidence interval for <span class="math inline">\(X\)</span>
+at some location <span class="math inline">\({\boldsymbol{\mathrm{s}}}\)</span> is given by
+<span class="math inline">\([q_{\alpha/2}({\boldsymbol{\mathrm{s}}}),q_{1-\alpha/2}({\boldsymbol{\mathrm{s}}})]\)</span>,
+where <span class="math inline">\(q_{\alpha}({\boldsymbol{\mathrm{s}}})\)</span>
+denotes the <span class="math inline">\(\alpha\)</span>-quantile in the
+marginal distribution of <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span>.</p>
+<p>A problem with using pointwise confidence bands is that there is not
+joint interpretation, and one is therefore often of interested in
+computing simultaneous confidence bands. For a process <span class="math inline">\(X({\boldsymbol{\mathrm{s}}}),
+{\boldsymbol{\mathrm{s}}}\in \Omega\)</span>, we define a simultaneous
+confidence band as the region <span class="math inline">\(\{({\boldsymbol{\mathrm{s}}},y):
+{\boldsymbol{\mathrm{s}}}\in \Omega, q_{\rho}({\boldsymbol{\mathrm{s}}})
+\leq y \leq q_{1-\rho}({\boldsymbol{\mathrm{s}}})\}\)</span>. Here <span class="math inline">\(\rho\)</span> is chosen such that <span class="math inline">\(P(q_{\rho}({\boldsymbol{\mathrm{s}}})&lt;X({\boldsymbol{\mathrm{s}}})
+&lt;q_{1-\rho}({\boldsymbol{\mathrm{s}}}), {\boldsymbol{\mathrm{s}}}\in
+\Omega)=1-\alpha\)</span>. Thus <span class="math inline">\(\alpha\)</span> controls the probability that the
+process is inside the confidence band at all locations in <span class="math inline">\(\Omega\)</span>.</p>
+</div>
+</div>
+<div id="computational-methods" class="section level2">
+<h2>Computational methods</h2>
+<p>If the latent process <span class="math inline">\(X({\boldsymbol{\mathrm{s}}})\)</span> is defined
+on a continuous domain <span class="math inline">\(\Omega\)</span>, one
+has to use a discretization, <span class="math inline">\({\boldsymbol{\mathrm{x}}}\)</span>, of the process
+in the statistical analysis. The vector <span class="math inline">\({\boldsymbol{\mathrm{x}}}\)</span> may be the
+process evaluated at some locations of interest or more generally the
+weights in a basis expansion <span class="math inline">\(X({\boldsymbol{\mathrm{s}}}) = \sum_i
+\varphi_i({\boldsymbol{\mathrm{s}}}) x_i\)</span>. Computations in the
+package are in a first stage performed using the distribution of <span class="math inline">\({\boldsymbol{\mathrm{x}}}\)</span>. If <span class="math inline">\(\Omega\)</span> is continuous, computations in a
+second stage interpolates the results for <span class="math inline">\({\boldsymbol{\mathrm{x}}}\)</span> to <span class="math inline">\(\Omega\)</span>. In this section, we briefly
+outline the computational methods used in these two stages. As most
+quantities of interest can be obtained using some excursion function, we
+focus on how these are computed. As a representative example, we outline
+how <span class="math inline">\(F_u^+({\boldsymbol{\mathrm{s}}})\)</span> is
+computed in the following sections.</p>
+<p>As before, let <span class="math inline">\({\boldsymbol{\mathrm{Y}}}\)</span> and <span class="math inline">\({\boldsymbol{\mathrm{\theta}}}\)</span> be a
+vectors respectively containing observations and model parameters.
+Computing an excursion function <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+ = \{F_u^+(x_1),
+\ldots, F_u^+(x_n)\}\)</span> requires computing integrals of the
+posterior distribution for <span class="math inline">\({\boldsymbol{\mathrm{x}}}\)</span>. To save
+computation time, it is assumed that <span class="math inline">\(E_{{u,\alpha_1}}^{{+}} \subset
+E_{{u,\alpha_2}}^{{+}}\)</span> if <span class="math inline">\(\alpha_1
+&gt; \alpha_2\)</span>. This means that <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u\)</span> can be
+obtained by first reordering the nodes and then computing a sequential
+integral. The reordering is in this case obtained by sorting the
+marginal probabilities <span class="math inline">\(P(x_i &gt;
+u)\)</span> (for other options, see <span class="citation">(Bolin and
+Lindgren 2015)</span>. After reordering, the <span class="math inline">\(i\)</span>:th element of <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> is obtained
+as the integral <span class="math display">\[
+\int_u^{\infty}\pi({\boldsymbol{\mathrm{x}}}_{1:i}|{\boldsymbol{\mathrm{Y}}})
+d{\boldsymbol{\mathrm{x}}}_{1:i}.
+\]</span> Using sequential importance sampling as described below, the
+whole sequence of integrals can be obtained with the same cost as
+computing only one integral with <span class="math inline">\(i=n\)</span>, making the computation of <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> feasible
+also for large problems.</p>
+<div id="gaussian-integrals" class="section level3">
+<h3>Gaussian integrals</h3>
+<p>The basis for the computational methods in the package is the ability
+to compute the required integral when the posterior distribution is
+Gaussian. In this case, one should compute an integral <span class="math display">\[\begin{equation}\label{eq:markovint}
+\frac{|{\boldsymbol{\mathrm{Q}}}|^{1/2}}{(2\pi)^{d/2}}\int_{{\boldsymbol{\mathrm{u}}}-{\boldsymbol{\mathrm{\mu}}}\leq
+{\boldsymbol{\mathrm{x}}}}\exp\left(-\frac{1}{2}{\boldsymbol{\mathrm{x}}}^{\top}{\boldsymbol{\mathrm{Q}}}
+{\boldsymbol{\mathrm{x}}}\right) \,\mathrm{d}{\boldsymbol{\mathrm{x}}}.
+\end{equation}\]</span> Here <span class="math inline">\({\boldsymbol{\mathrm{\mu}}}\)</span> and <span class="math inline">\({\boldsymbol{\mathrm{Q}}}\)</span> are the
+posterior mean and posterior precision matrix respectively. To take
+advantage of the possible sparsity of <span class="math inline">\({\boldsymbol{\mathrm{Q}}}\)</span> if a Markovian
+model is used, the integral is rewritten as <span class="math display">\[\begin{equation}\label{eq:seqint}
+\int_{a_d}^{\infty}\pi(x_d)
+\int_{a_{d-1}}^{\infty}\pi(x_{d-1}|x_d)
+\cdots
+\int_{a_2}^{\infty}\pi(x_2|{\boldsymbol{\mathrm{x}}}_{3:d})
+\int_{a_1}^{\infty} \pi(x_1|{\boldsymbol{\mathrm{x}}}_{2:d})
+\,\mathrm{d}{\boldsymbol{\mathrm{x}}}
+\end{equation}\]</span> where, if the problem has a Markov structure,
+<span class="math inline">\(x_i|{\boldsymbol{\mathrm{x}}}_{i+1:d}\)</span>
+only depends on a few of the elements in <span class="math inline">\(x_{i+1:d}\)</span> given by the Markov structure.
+The integral is calculated using a sequential importance sampler by
+starting with the integral of the last component <span class="math inline">\(\pi(x_d)\)</span> and then moving backward in the
+indices, see for further details.</p>
+</div>
+<div id="handling-non-gaussian-data" class="section level3">
+<h3>Handling non-Gaussian data</h3>
+<p>Using the sequential importance sampler above, <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> can be
+computed for Gaussian models with known parameters. For more complicated
+models, the latent Gaussian structure has to be handled, and this can be
+done in different ways depending on the accuracy that is needed.
+<code>excursions</code> currently supports the following five methods
+described in detail in <span class="citation">(Bolin and Lindgren
+2015)</span>: Empirical Bayes (<code>EB</code>), Quantile Correction
+(<code>QC</code>), Numerical Integration (<code>NI</code>), Numerical
+integration with Quantile Corrections (<code>NIQC</code>), and improved
+Numerical integration with Quantile Corrections
+(<code>iNIQC</code>).</p>
+<p>The <code>EB</code> method is the simplest method and is based on
+using a Gaussian approximation of the posterior, <span class="math inline">\(\pi({\boldsymbol{\mathrm{x}}}|{\boldsymbol{\mathrm{Y}}})
+\approx
+\pi_G({\boldsymbol{\mathrm{x}}}|{\boldsymbol{\mathrm{Y}}},\widehat{{\boldsymbol{\mathrm{\theta}}}})\)</span>.
+The <code>QC</code> method uses the same Gaussian approximation but
+modifies the limits in the integral to improve the accuracy. The three
+other methods are intended for Bayesian models, where the posterior is
+obtained by integrating over the parameters, <span class="math display">\[\begin{equation*}
+\pi({\boldsymbol{\mathrm{x}}}\mid{\boldsymbol{\mathrm{Y}}}) = \int
+\pi({\boldsymbol{\mathrm{x}}}\mid{\boldsymbol{\mathrm{Y}}},{\boldsymbol{\mathrm{\theta}}})\pi({\boldsymbol{\mathrm{\theta}}}\mid{\boldsymbol{\mathrm{Y}}})d{\boldsymbol{\mathrm{\theta}}}.
+\end{equation*}\]</span> The <code>NI</code> method approximates the
+integration with respect to the parameters as in the INLA method, using
+a sum of representative parameter configurations, and the
+<code>NIQC</code> and <code>iNIQC</code> methods combines this with the
+<code>QC</code> method to improve the accuracy further.</p>
+<p>In general, <code>EB</code> and <code>QC</code> are suitable for
+frequentist models and for Bayesian models where the posterior
+distribution conditionally on the parameters is approximately Gaussian.
+The methods are equivalent if the posterior is Gaussian and in other
+cases <code>QC</code> is more accurate than <code>EB</code>. For
+Bayesian models, the <code>NI</code> method is, in general, more
+accurate than the <code>QC</code> method, and for non-Gaussian
+likelihoods, the <code>NIQC</code> and <code>iNIQC</code> methods can be
+used for improved results. In general the accuracy and computational
+cost of the methods are as follows</p>
+<p>Accuracy: <code>EB</code> <span class="math inline">\(&lt;\)</span>
+<code>QC</code> <span class="math inline">\(&lt;\)</span>
+<code>NI</code> <span class="math inline">\(&lt;\)</span>
+<code>NIQC</code> <span class="math inline">\(&lt;\)</span>
+<code>iNIQC</code></p>
+<p>Computational cost: <code>EB</code> <span class="math inline">\(\approx\)</span> <code>QC</code> <span class="math inline">\(&lt;\)</span> <code>NI</code> <span class="math inline">\(\approx\)</span> <code>NIQC</code> <span class="math inline">\(&lt;\)</span> <code>iNIQC</code>.</p>
+<p>If the main purpose of the analysis is to construct excursion or
+contour sets for low values of <span class="math inline">\(\alpha\)</span>, we recommend using the
+<code>QC</code> method for problems with Gaussian likelihoods and the
+<code>NIQC</code> method for problems with non-Gaussian likelihoods. The
+increase in accuracy of the <code>iNIQC</code> method is often small
+compared to the added computational cost.</p>
+</div>
+<div id="continuous-domain-interpolations" class="section level3">
+<h3>Continuous domain interpolations</h3>
+<p>For a continuous spatial domain, the excursion function <span class="math inline">\(F_u^+({\boldsymbol{\mathrm{s}}})\)</span> can be
+approximated using <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> computed at
+discrete point locations. The main idea is to interpolate <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> assuming
+monotonicity of the random field between the discrete computation
+locations. Specifically, assume that the values of <span class="math inline">\({\boldsymbol{\mathrm{F}}}_u^+\)</span> correspond
+to the values at the vertices of some triangulated mesh. If the
+excursion set <span class="math inline">\(E_{{u,\alpha}}^{{+}}(X)\)</span> should be
+computed for some specific value of <span class="math inline">\(\alpha\)</span>, one has to find the <span class="math inline">\(1-\alpha\)</span> contour for <span class="math inline">\(F_u^+({\boldsymbol{\mathrm{s}}})\)</span>. For
+interpolation to a location <span class="math inline">\({\boldsymbol{\mathrm{s}}}\)</span> within a
+specific triangle <span class="math inline">\(\mathcal{T}\)</span> with
+corners in <span class="math inline">\({\boldsymbol{\mathrm{s}}}_1,
+{\boldsymbol{\mathrm{s}}}_2,\)</span> and <span class="math inline">\({\boldsymbol{\mathrm{s}}}_3\)</span>,
+<code>excursions</code> by default uses log-linear interpolation, <span class="math inline">\(F_u({\boldsymbol{\mathrm{s}}}) =
+\exp\{\sum_{k=1}^3 w_k\log[F_u({\boldsymbol{\mathrm{s}}}_k)]\}\)</span>.
+Here <span class="math inline">\(\{(w_1,w_2,w_3);\, w_1,w_2,w_3\geq 0,\,
+\sum_{k=1}^3 w_i=1\}\)</span> are the barycentric coordinates of <span class="math inline">\({\boldsymbol{\mathrm{s}}}\)</span> within the
+triangle.</p>
+<p>Further technical details of the continuous domain construction are
+given in <span class="citation">(Bolin and Lindgren 2017)</span>.
+Studies of the resulting continuous domain excursion sets in <span class="citation">(Bolin and Lindgren 2017)</span> indicate that the
+log-linear interpolation method results in sets with coverage
+probability on target or slightly above target for large target
+probabilities.</p>
+</div>
+</div>
+<div id="references" class="section level2 unnumbered">
+<h2 class="unnumbered">References</h2>
+<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-bolin12" class="csl-entry">
+Bolin, David, and Finn Lindgren. 2015. <span>“Excursion and Contour
+Uncertainty Regions for Latent Gaussian Models.”</span> <em>Journal of
+the Royal Statistical Society B</em> 77: 85–106. <a href="https://doi.org/10.1111/rssb.12055">https://doi.org/10.1111/rssb.12055</a>.
+</div>
+<div id="ref-bolin15contours" class="csl-entry">
+———. 2017. <span>“Quantifying the Uncertainty of Contour Maps.”</span>
+<em>Journal of Computational and Graphical Statistics</em> 26 (3):
+513–24. <a href="https://doi.org/10.1080/10618600.2016.1228537">https://doi.org/10.1080/10618600.2016.1228537</a>.
+</div>
+<div id="ref-rue09" class="csl-entry">
+Rue, H, S Martino, and N Chopin. 2009. <span>“Approximate
+<span>B</span>ayesian Inference for Latent <span>G</span>aussian Models
+Using Integrated Nested <span>L</span>aplace Approximations (with
+Discussion).”</span> <em>Journal of the Royal Statistical Society B</em>
+71 (2): 319–92. <a href="https://doi.org/10.1111/j.1467-9868.2008.00700.x">https://doi.org/10.1111/j.1467-9868.2008.00700.x</a>.
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,3 +1,18 @@
+# excursions 2.5.11
+ 
+* Update link to external inla vignette in documentation
+
+# excursions 2.5.10
+ 
+* Corrections to various links in documentation 
+
+# excursions 2.5.9
+
+* Add -DNPRINT to CAMD build, and remove fflush(stdout) use, to avoid fprint
+  and stdout usage
+* Fix issue with identity matrices, ensuring they are not treated as all-zero
+* Remove obsolete and unneded includes of Rdefines.h and R_ext/PrtUtil.h
+
 # excursions 2.5.8
 
 * Minor updates to C code to avoid warning with gcc13 and clang17 compilers
